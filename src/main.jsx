@@ -4,7 +4,7 @@ import './styles.css';
 
 const seedTeachers = [
   {
-    id: 1, name: 'Aigerim S.', subject: 'Robotics & STEM', city: 'Almaty', mode: 'Online / Offline',
+    id: 1, name: 'Aigerim S.', avatar: 'https://api.dicebear.com/9.x/notionists/svg?seed=Aigerim&backgroundColor=e8f5f4', subject: 'Robotics & STEM', city: 'Almaty', mode: 'Online / Offline',
     rating: 4.9, reviews: 48, lessons: 126, repeatInvites: 31, price: 15000,
     languages: ['Қазақша','Русский','English'], experience: '6 лет', grades: '5–11 классы',
     education: [
@@ -21,7 +21,7 @@ const seedTeachers = [
     ]
   },
   {
-    id: 2, name: 'Dias K.', subject: 'English', city: 'Astana', mode: 'Online',
+    id: 2, name: 'Dias K.', avatar: 'https://api.dicebear.com/9.x/notionists/svg?seed=Dias&backgroundColor=edf4f7', subject: 'English', city: 'Astana', mode: 'Online',
     rating: 4.8, reviews: 36, lessons: 94, repeatInvites: 22, price: 12000,
     languages: ['English','Русский'], experience: '5 лет', grades: '7–11 классы',
     education: [{ place: 'ENU', degree: 'Foreign Languages', period: '2017–2021' }],
@@ -30,7 +30,7 @@ const seedTeachers = [
     reviewsList: [{ school: 'NIS partner school', text: 'Динамичный speaking club и хороший контакт с учениками.', rating: 5 }]
   },
   {
-    id: 3, name: 'Madina T.', subject: 'Physics', city: 'Kyzylorda', mode: 'Online',
+    id: 3, name: 'Madina T.', avatar: 'https://api.dicebear.com/9.x/notionists/svg?seed=Madina&backgroundColor=fff7df', subject: 'Physics', city: 'Kyzylorda', mode: 'Online',
     rating: 4.7, reviews: 29, lessons: 82, repeatInvites: 18, price: 10000,
     languages: ['Қазақша','Русский'], experience: '7 лет', grades: '7–11 классы',
     education: [{ place: 'Korkyt Ata University', degree: 'Physics', period: '2014–2018' }],
@@ -56,17 +56,17 @@ const seedPromos = [
     title: 'Future Education Forum 2026',
     partner: 'ORTA Partner',
     date: '18 ноября 2026',
-    description: 'Панельные сессии, EdTech-проекты, школы и компании на одной площадке.',
+    image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1400&q=80',
     cta: 'Подробнее'
   },
   {
     id: 2,
-    type: 'Бесплатные уроки',
+    type: 'Бесплатная программа',
     badge: 'Демо',
     title: '200 онлайн-уроков по электронике',
     partner: 'Technology Partner',
     date: 'Доступно онлайн',
-    description: 'Базовая электроника, схемотехника, микроконтроллеры и практические задания для школьников.',
+    image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=80',
     cta: 'Смотреть программу'
   },
   {
@@ -75,8 +75,8 @@ const seedPromos = [
     badge: 'Демо',
     title: 'Школьный STEM Challenge',
     partner: 'Education Foundation',
-    date: 'Приём заявок до 30 ноября',
-    description: 'Команды школ подают STEM-проекты и получают поддержку на реализацию лучших идей.',
+    date: 'Заявки до 30 ноября',
+    image: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=1400&q=80',
     cta: 'Условия участия'
   }
 ];
@@ -84,6 +84,7 @@ const seedPromos = [
 const demoSchool = {
   id: 'school-demo',
   name: 'ORTA Demo School',
+  image: 'https://api.dicebear.com/9.x/shapes/svg?seed=ORTASchool&backgroundColor=e8f5f4',
   city: 'Almaty',
   students: 620,
   website: 'school.orta.kz',
@@ -253,31 +254,33 @@ function Home({ setPage }) {
         <button className="secondary" onClick={() => setPage('opportunities')}>Все возможности</button>
       </div>
 
-      <div className="promo-grid">
-        {seedPromos.map((promo, index) => (
-          <article className={"promo-card promo-" + (index + 1)} key={promo.id}>
-            <div className="promo-topline">
-              <span className="promo-type">{promo.type}</span>
-              <span className="promo-demo">{promo.badge}</span>
-            </div>
-            <h3>{promo.title}</h3>
-            <p className="promo-partner">{promo.partner}</p>
-            <p className="promo-description">{promo.description}</p>
-            <div className="promo-bottom">
-              <span>{promo.date}</span>
-              <button className="promo-link" onClick={() => setPage('opportunities')}>{promo.cta} →</button>
+      <div className="promo-carousel" aria-label="Промо-возможности">
+        {seedPromos.map((promo) => (
+          <article className="promo-banner" key={promo.id} style={{backgroundImage:`linear-gradient(90deg, rgba(7,24,38,.84) 0%, rgba(7,24,38,.58) 48%, rgba(7,24,38,.12) 100%), url(${promo.image})`}}>
+            <div className="promo-banner-content">
+              <div className="promo-topline">
+                <span className="promo-type">{promo.type}</span>
+                <span className="promo-demo">{promo.badge}</span>
+              </div>
+              <p className="promo-partner">{promo.partner}</p>
+              <h3>{promo.title}</h3>
+              <div className="promo-bottom">
+                <span>{promo.date}</span>
+                <button className="promo-button" onClick={() => setPage('opportunities')}>{promo.cta} →</button>
+              </div>
             </div>
           </article>
         ))}
       </div>
-
-      <div className="partner-note">
-        <b>Для компаний и фондов:</b> здесь можно размещать образовательные программы, форумы, гранты и бесплатные курсы для школ и преподавателей.
-      </div>
+      <p className="promo-hint">Листайте баннеры →</p>
     </section>
 
-    <section className="features">
-      {[['Для школ','Публикуйте запросы, приглашайте учителей, находите готовые занятия.'],['Для учителей','Создавайте профиль, находите школы и оплачиваемые занятия.'],['Для регионов','Доступ к экспертам вне зависимости от города и размера школы.']].map(([t,d]) => <article key={t}><h3>{t}</h3><p>{d}</p></article>)}
+    <section className="features compact-features">
+      {[
+        ['🏫','Для школ','Найти преподавателя'],
+        ['👩‍🏫','Для учителей','Найти занятие'],
+        ['🌍','Для регионов','Получить доступ']
+      ].map(([icon,t,d]) => <article key={t}><span className="feature-icon">{icon}</span><div><h3>{t}</h3><p>{d}</p></div></article>)}
     </section>
   </>
 }
@@ -291,7 +294,7 @@ function Teachers({ search, setSearch, filters, setFilters, items, openTeacher }
       <select value={filters.mode} onChange={e => setFilters({...filters, mode:e.target.value})}><option>Все</option><option>Online</option><option>Offline</option></select>
     </div>
     <div className="grid">{items.map(t => <article className="card" key={t.id}>
-      <div className="avatar">{t.name[0]}</div><h3>{t.name}</h3><p className="muted">{t.subject}</p><p>{t.city} · {t.mode}</p><p>★ {t.rating} · {t.lessons} уроков · от {t.price.toLocaleString('ru-RU')} ₸</p><div className="tags">{t.tags.map(tag => <span key={tag}>{tag}</span>)}</div><button className="secondary" onClick={() => openTeacher(t)}>Открыть профиль</button>
+      <img className="avatar avatar-photo" src={t.avatar} alt={t.name} /><h3>{t.name}</h3><p className="muted">{t.subject}</p><p>{t.city} · {t.mode}</p><p>★ {t.rating} · {t.lessons} уроков · от {t.price.toLocaleString('ru-RU')} ₸</p><div className="tags">{t.tags.map(tag => <span key={tag}>{tag}</span>)}</div><button className="secondary" onClick={() => openTeacher(t)}>Открыть профиль</button>
     </article>)}</div>
   </section>
 }
@@ -300,7 +303,7 @@ function TeacherProfile({ teacher, setPage }) {
   return <section className="page-section profile-layout">
     <aside className="profile-card teacher-sidebar">
       <div className="profile-identity">
-        <div className="avatar large">{teacher.name[0]}</div>
+        <img className="avatar large avatar-photo" src={teacher.avatar} alt={teacher.name} />
         <div><h2>{teacher.name}</h2><p className="muted">{teacher.subject}</p></div>
       </div>
       <div className="teacher-rating">★ {teacher.rating} <span>({teacher.reviews} отзывов)</span></div>
@@ -390,7 +393,7 @@ function OpportunityDetail({ opp, apply }) {
 }
 
 function SchoolProfile({ school, opportunities, openOpportunity }) {
-  return <section className="page-section"><div className="school-head"><div><span className="eyebrow">School profile</span><h2>{school.name} {school.verified && <span className="verified">✓</span>}</h2><p>{school.city} · {school.students} учеников · {school.website}</p><p>{school.about}</p></div></div><h2 className="spaced">Открытые запросы</h2><div className="list">{opportunities.slice(0,4).map(o=><article className="opportunity" key={o.id}><div><h3>{o.title}</h3><p className="muted">{o.city} · {o.format}</p></div><button className="secondary" onClick={()=>openOpportunity(o)}>Подробнее</button></article>)}</div></section>
+  return <section className="page-section"><div className="school-head"><img className="school-avatar" src={school.image} alt={school.name} /><div><span className="eyebrow">School profile</span><h2>{school.name} {school.verified && <span className="verified">✓</span>}</h2><p>{school.city} · {school.students} учеников · {school.website}</p><p>{school.about}</p></div></div><h2 className="spaced">Открытые запросы</h2><div className="list">{opportunities.slice(0,4).map(o=><article className="opportunity" key={o.id}><div><h3>{o.title}</h3><p className="muted">{o.city} · {o.format}</p></div><button className="secondary" onClick={()=>openOpportunity(o)}>Подробнее</button></article>)}</div></section>
 }
 
 function Login({ login }) {
