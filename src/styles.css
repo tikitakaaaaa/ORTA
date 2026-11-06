@@ -638,3 +638,56 @@ footer{padding:30px 7vw;color:#778995;border-top:1px solid var(--border);backgro
 .school-map-note{margin-top:14px;background:#fff7df;border:1px solid #efd889;border-radius:16px;padding:13px 15px;color:#765c1d;font-size:13px}
 @media(max-width:900px){.schools-map-hero,.school-map-layout{grid-template-columns:1fr}.school-network-stats{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:640px){.school-network-stats{grid-template-columns:1fr}.school-network-map{min-height:290px}.school-map-list{min-height:auto}}
+
+
+/* Fix: school map must stay inside its own frame */
+.school-map-layout{
+  grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr);
+  align-items:start;
+}
+.school-map-card,
+.school-map-list{
+  min-width:0;
+  overflow:hidden;
+}
+.school-map-card{
+  position:relative;
+}
+.school-network-map{
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  overflow:hidden;
+  border-radius:18px;
+  position:relative;
+  aspect-ratio: 16 / 9;
+  min-height:0;
+}
+.school-network-map .kz-shape{
+  width:100%;
+  height:100%;
+  display:block;
+  max-width:100%;
+}
+.school-map-pin{
+  max-width:92px;
+}
+.school-map-list{
+  width:100%;
+}
+.school-list-scroll{
+  min-width:0;
+}
+.school-network-card{
+  width:100%;
+  box-sizing:border-box;
+}
+@media(max-width:900px){
+  .school-map-layout{grid-template-columns:1fr}
+  .school-network-map{aspect-ratio:16 / 10}
+}
+@media(max-width:640px){
+  .school-network-map{aspect-ratio:4 / 3}
+  .school-map-pin{max-width:72px}
+  .school-pin-label{font-size:10px;padding:4px 6px}
+}
