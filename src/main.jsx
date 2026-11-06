@@ -286,6 +286,39 @@ function Home({ setPage }) {
       </div>
     </section>
 
+    <section className="how-it-works">
+      <div className="section-kicker">
+        <span className="eyebrow">Simple flow</span>
+        <h2>Как это работает</h2>
+      </div>
+      <div className="how-grid">
+        {[
+          ['01','Школа публикует запрос','Указывает предмет, формат, дату и условия.'],
+          ['02','Преподаватель откликается','Школа сразу видит профиль, опыт и отзывы.'],
+          ['03','Договариваются о занятии','После принятия отклика стороны переходят к занятию.']
+        ].map(([n,t,d]) => <article className="how-card" key={n}>
+          <span className="how-number">{n}</span>
+          <h3>{t}</h3>
+          <p>{d}</p>
+        </article>)}
+      </div>
+    </section>
+
+    <section className="trust-strip">
+      <div className="trust-item">
+        <span className="trust-icon">✓</span>
+        <div><b>Проверяем профили</b><small>Верификацию подключим по мере запуска</small></div>
+      </div>
+      <div className="trust-item">
+        <span className="trust-icon">↔</span>
+        <div><b>Прозрачный выбор</b><small>Опыт, рейтинг, отзывы и условия до отклика</small></div>
+      </div>
+      <div className="trust-item">
+        <span className="trust-icon">◎</span>
+        <div><b>Поддержка школ</b><small>Помогаем найти подходящего специалиста</small></div>
+      </div>
+    </section>
+
     <section className="promo-section">
       <div className="promo-heading">
         <div>
