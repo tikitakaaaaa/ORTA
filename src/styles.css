@@ -254,3 +254,48 @@ footer{padding:30px 7vw;color:#778995;border-top:1px solid var(--border);backgro
   .page-section,.features,.promo-section{padding-left:22px;padding-right:22px}
   .detail-grid{grid-template-columns:1fr}
 }
+
+.teacher-sidebar{display:grid;gap:18px}
+.profile-identity{display:flex;align-items:center;gap:16px}
+.profile-identity h2{margin:0 0 4px!important}
+.teacher-rating{font-size:18px;font-weight:900;color:var(--navy)}
+.teacher-rating span{font-size:13px;font-weight:600;color:#7a8a95}
+.teacher-quick-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.teacher-quick-stats div{padding:14px;background:#f1f7f8;border-radius:15px;display:grid;gap:3px}
+.teacher-quick-stats b{font-size:24px;color:var(--navy)}
+.teacher-quick-stats span{font-size:12px;color:#6f818d;line-height:1.25}
+.profile-facts{display:grid;gap:0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.profile-facts p{display:flex;justify-content:space-between;gap:18px;margin:0;padding:12px 0;border-bottom:1px solid #edf2f5;font-size:14px}
+.profile-facts p:last-child{border-bottom:0}
+.profile-facts span{color:#657783;text-align:right}
+.profile-price{font-size:21px;font-weight:900;color:var(--navy)}
+.profile-price span{font-size:13px;font-weight:600;color:#7a8a95}
+.profile-bio{font-size:17px;line-height:1.75;color:#526673;max-width:850px}
+.profile-section{margin-top:32px;padding-top:6px}
+.profile-section h3{margin:0 0 15px;color:var(--navy)}
+.timeline-list{display:grid;gap:15px}
+.timeline-item{display:grid;grid-template-columns:18px 1fr;gap:12px;position:relative}
+.timeline-dot{width:12px;height:12px;border-radius:50%;background:var(--teal);margin-top:5px;box-shadow:0 0 0 5px var(--teal-soft)}
+.timeline-item b{color:var(--navy)}
+.timeline-item p{margin:3px 0;color:#5f7280}
+.timeline-item small{color:#8a99a3}
+.profile-two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+.mini-panel{background:#f7fafb;border:1px solid var(--border);border-radius:18px;padding:20px;margin-top:18px}
+.clean-list{list-style:none;padding:0;margin:0;display:grid;gap:11px;color:#526673}
+.clean-list li{line-height:1.45}
+.reviews-heading{display:flex;justify-content:space-between;align-items:center;gap:16px}
+.reviews-heading span{font-size:13px;font-weight:800;color:#6d7e89}
+.review-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.review-card{background:#f9fbfc;border:1px solid var(--border);border-radius:18px;padding:20px}
+.review-card p{line-height:1.6;color:#526673}
+.review-card b{color:var(--navy);font-size:14px}
+.review-stars{color:#d59b16;letter-spacing:2px}
+@media(max-width:900px){
+  .profile-two-col,.review-grid{grid-template-columns:1fr}
+  .teacher-quick-stats{grid-template-columns:1fr 1fr}
+}
+@media(max-width:520px){
+  .profile-identity{align-items:flex-start}
+  .teacher-quick-stats{grid-template-columns:1fr}
+  .reviews-heading{align-items:flex-start;flex-direction:column}
+}
