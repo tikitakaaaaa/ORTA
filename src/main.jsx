@@ -139,6 +139,15 @@ const demoSchool = {
   pilotLimit: 20000
 };
 
+const seedSchools = [
+  { id: 's1', name: 'ORTA Demo School', city: 'Almaty', students: 620, programs: 4, verified: true, focus: ['STEM','Languages'] },
+  { id: 's2', name: 'School №125', city: 'Almaty', students: 980, programs: 3, verified: true, focus: ['Robotics','STEM'] },
+  { id: 's3', name: 'NIS Partner School', city: 'Astana', students: 760, programs: 2, verified: true, focus: ['Languages','Career'] },
+  { id: 's4', name: 'Regional STEM School', city: 'Kyzylorda', students: 540, programs: 2, verified: true, focus: ['Physics','Engineering'] },
+  { id: 's5', name: 'Pilot Rural School', city: 'Kyzylorda', students: 310, programs: 1, verified: false, focus: ['STEM'] },
+  { id: 's6', name: 'Future Skills School', city: 'Shymkent', students: 690, programs: 2, verified: true, focus: ['AI','Languages'] }
+];
+
 const readLocal = (key, fallback) => {
   try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; }
 };
@@ -275,7 +284,7 @@ function App() {
         <nav>
           <button onClick={() => setPage('programs')}>Уроки и программы</button>
           <button onClick={() => setPage('opportunities')}>Возможности</button>
-          <button onClick={() => setPage('schoolProfile')}>Школы</button>
+          <button onClick={() => setPage('schoolsMap')}>Школы</button>
           <button onClick={() => setPage('about')}>О нас</button>
           <button onClick={() => setPage('partners')}>Партнёрам</button>
           {role !== 'guest' && <button onClick={() => setPage('dashboard')}>Dashboard</button>}
@@ -296,6 +305,7 @@ function App() {
         {page === 'teacherProfile' && selectedTeacher && <TeacherProfile teacher={selectedTeacher} setPage={setPage} />}
         {page === 'opportunities' && <Opportunities items={filteredOpps} filters={oppFilters} setFilters={setOppFilters} openOpportunity={openOpportunity} apply={apply} />}
         {page === 'opportunityDetail' && selectedOpportunity && <OpportunityDetail opp={selectedOpportunity} apply={apply} />}
+        {page === 'schoolsMap' && <SchoolsMap schools={seedSchools} setPage={setPage} />}
         {page === 'schoolProfile' && <SchoolProfile school={demoSchool} opportunities={opportunities} openOpportunity={openOpportunity} />}
         {page === 'login' && <Login login={login} />}
         {page === 'dashboard' && <Dashboard role={role} opportunities={opportunities} applications={applications} createOpportunity={createOpportunity} updateApplicationStatus={updateApplicationStatus} openOpportunity={openOpportunity} />}
@@ -390,7 +400,7 @@ function Home({ setPage }) {
         {[
           ['👨‍🏫','Найти урок с экспертом','Гостевой урок, лекция или мастер-класс','programs'],
           ['🔬','Провести STEM-урок','Робототехника, физика, инженерия','programs'],
-          ['🏫','Найти школу-партнёра','Совместные уроки и обмен опытом','schoolProfile'],
+          ['🏫','Найти школу-партнёра','Совместные уроки и обмен опытом','schoolsMap'],
           ['🎓','Найти программу','Курсы и инициативы компаний','programs'],
           ['🏆','Грант / конкурс / форум','Внешние образовательные возможности','opportunities'],
           ['📚','Получить материалы','Готовые уроки и методические ресурсы','programs']
@@ -548,7 +558,7 @@ function NeedsMatcher({ setPage, openProgram }) {
     { id: 'stem', icon: '⚙️', title: 'Нужен STEM-урок', text: 'Робототехника, инженерия, физика, энергетика', programId: 'arduino-smart-city', action: 'Открыть STEM-программу' },
     { id: 'expert', icon: '🧑‍🏭', title: 'Нужен эксперт из индустрии', text: 'Гостевой урок, профориентация, инженер или специалист', target: 'programs', action: 'Посмотреть программы с экспертами' },
     { id: 'language', icon: '🌍', title: 'Хотим языковой обмен', text: 'Speaking club, совместный урок или международный формат', programId: 'english-speaking-club', action: 'Открыть языковую программу' },
-    { id: 'partner', icon: '🏫', title: 'Ищем школу-партнёра', text: 'Совместный урок, обмен опытом или межрегиональный проект', target: 'schoolProfile', action: 'Перейти к школам' },
+    { id: 'partner', icon: '🏫', title: 'Ищем школу-партнёра', text: 'Совместный урок, обмен опытом или межрегиональный проект', target: 'schoolsMap', action: 'Перейти к школам' },
     { id: 'ai', icon: '🤖', title: 'Нужна программа по AI / Robotics', text: 'Практические занятия, цифровые навыки и проектная работа', programId: 'arduino-smart-city', action: 'Посмотреть подходящую программу' },
     { id: 'funding', icon: '🎁', title: 'Нужно финансирование', text: 'Pilot Credits, гранты, программы компаний и фондов', target: 'opportunities', action: 'Посмотреть возможности' },
     { id: 'materials', icon: '📦', title: 'Нужны материалы или оборудование', text: 'Наборы, лаборатории, методические ресурсы и партнёрская поддержка', target: 'partners', action: 'Найти партнёрские решения' }
@@ -629,7 +639,7 @@ function ProgramDetail({ program, teachers, openTeacher, setPage }) {
         <p>{program.summary}</p>
         <div className="program-meta large"><span>{program.grades}</span><span>{program.format}</span><span>{program.duration}</span><span>{program.city}</span></div>
       </div>
-      <button className="primary big" onClick={()=>setPage('schoolProfile')}>Запросить для школы</button>
+      <button className="primary big" onClick={()=>setPage('schoolsMap')}>Запросить для школы</button>
     </div>
 
     <div className="program-detail-grid">
@@ -962,6 +972,76 @@ function OpportunityDetail({ opp, apply }) {
   const [message, setMessage] = useState('Здравствуйте! Мне интересен ваш запрос. Готов обсудить формат занятия.');
   return <section className="page-section detail-page"><div><div className="opp-badges"><span className="status">{opp.status}</span>{opp.pilot && <span className="pilot-badge">🎁 ORTA Pilot · до 20 000 ₸</span>}</div><h2>{opp.title}</h2><p className="muted">{opp.school} · {opp.city}</p><div className="detail-grid"><div><b>Предмет</b><span>{opp.subject}</span></div><div><b>Класс</b><span>{opp.grade}</span></div><div><b>Формат</b><span>{opp.format}</span></div><div><b>Дата</b><span>{opp.date || 'По согласованию'}</span></div><div><b>Длительность</b><span>{opp.duration}</span></div><div><b>Учеников</b><span>{opp.students}</span></div><div><b>Язык</b><span>{opp.language}</span></div><div><b>Оплата</b><span>{opp.pay.toLocaleString('ru-RU')} ₸</span></div></div><h3>Описание</h3><p>{opp.description}</p><h3>Требования</h3><p>{opp.requirements}</p></div>
     <aside className="apply-card"><h3>Откликнуться</h3><textarea rows="6" value={message} onChange={e=>setMessage(e.target.value)} /><button className="primary full" onClick={() => apply(opp, message)}>Отправить отклик</button></aside></section>
+}
+
+
+function SchoolsMap({ schools, setPage }) {
+  const [selectedCity, setSelectedCity] = useState('Все');
+  const cityData = [
+    { name: 'Astana', x: 54, y: 29 },
+    { name: 'Almaty', x: 76, y: 72 },
+    { name: 'Kyzylorda', x: 45, y: 69 },
+    { name: 'Shymkent', x: 40, y: 82 }
+  ];
+  const visible = selectedCity === 'Все' ? schools : schools.filter(s => s.city === selectedCity);
+  const totals = cityData.map(c => ({ ...c, count: schools.filter(s => s.city === c.name).length }));
+  const totalStudents = schools.reduce((sum, s) => sum + s.students, 0);
+
+  return <section className="page-section schools-map-page">
+    <div className="schools-map-hero">
+      <div>
+        <span className="eyebrow">ORTA School Network · Демо</span>
+        <h2>Школьная сеть на карте Казахстана</h2>
+        <p>Нажмите на город, чтобы увидеть школы в сети ORTA, их направления и доступные программы.</p>
+      </div>
+      <div className="school-network-stats">
+        <div><b>{schools.length}</b><span>школ в демо-сети</span></div>
+        <div><b>{cityData.filter(c => schools.some(s => s.city === c.name)).length}</b><span>городов</span></div>
+        <div><b>{totalStudents.toLocaleString('ru-RU')}</b><span>учеников</span></div>
+      </div>
+    </div>
+
+    <div className="school-map-layout">
+      <div className="school-map-card">
+        <div className="map-caption">
+          <div><b>Карта школ ORTA</b><span>Выберите город на карте</span></div>
+          {selectedCity !== 'Все' && <button onClick={() => setSelectedCity('Все')}>Показать все</button>}
+        </div>
+        <div className="kz-map school-network-map">
+          <svg className="kz-shape" viewBox="0 0 800 470" aria-hidden="true">
+            <path d="M87 188 L143 122 L246 94 L337 108 L405 77 L515 93 L570 139 L674 153 L710 216 L674 270 L601 292 L548 357 L455 371 L381 344 L305 365 L222 329 L153 310 L116 256 Z" />
+          </svg>
+          {totals.map(city => <button
+            key={city.name}
+            className={"school-map-pin" + (selectedCity === city.name ? " selected" : "")}
+            style={{left: city.x + '%', top: city.y + '%'}}
+            onClick={() => setSelectedCity(city.name)}
+          >
+            <span className="school-pin-count">{city.count}</span>
+            <span className="school-pin-label">{city.name}</span>
+          </button>)}
+        </div>
+      </div>
+
+      <aside className="school-map-list">
+        <div className="school-map-list-head">
+          <div><b>{selectedCity === 'Все' ? 'Все школы' : selectedCity}</b><span>{visible.length} в сети</span></div>
+        </div>
+        <div className="school-list-scroll">
+          {visible.map(s => <button className="school-network-card" key={s.id} onClick={() => s.id === 's1' && setPage('schoolProfile')}>
+            <div className="school-network-card-top">
+              <div><b>{s.name}</b><small>{s.city} · {s.students} учеников</small></div>
+              {s.verified && <span className="verified-pill">✓ Проверено</span>}
+            </div>
+            <div className="tags">{s.focus.map(x => <span key={x}>{x}</span>)}</div>
+            <div className="school-card-meta"><span>{s.programs} программ</span><span>{s.id === 's1' ? 'Открыть профиль →' : 'Демо-карточка'}</span></div>
+          </button>)}
+        </div>
+      </aside>
+    </div>
+
+    <div className="school-map-note"><b>Демо-данные.</b> После подключения регистрации карта сможет автоматически показывать реальные школы, регионы и рост сети.</div>
+  </section>
 }
 
 function SchoolProfile({ school, opportunities, openOpportunity }) {
