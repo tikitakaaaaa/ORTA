@@ -40,6 +40,51 @@ const seedTeachers = [
   },
 ];
 
+const seedPrograms = [
+  {
+    id: 'arduino-smart-city',
+    title: 'Arduino: Smart City',
+    category: 'STEM / Robotics',
+    grades: '8–9 классы',
+    format: 'Online / Offline',
+    duration: '1 мастер-класс или 12 занятий',
+    city: 'Almaty + online',
+    pilot: true,
+    summary: 'Практическая программа: датчики, Arduino, прототипирование и командный Smart City проект.',
+    schoolUse: 'Подходит как гостевой урок, STEM-неделя или серия практических занятий.',
+    teacherIds: [1],
+    schools: ['School №125', 'ORTA Demo School']
+  },
+  {
+    id: 'english-speaking-club',
+    title: 'English Speaking Club',
+    category: 'Languages',
+    grades: '7–11 классы',
+    format: 'Online',
+    duration: '60–75 мин',
+    city: 'По Казахстану',
+    pilot: true,
+    summary: 'Интерактивный speaking club с дискуссиями, играми и тематическими заданиями.',
+    schoolUse: 'Можно провести как разовый гостевой урок или регулярный клуб.',
+    teacherIds: [2],
+    schools: ['NIS Partner School']
+  },
+  {
+    id: 'future-energy',
+    title: 'Энергетика будущего',
+    category: 'Physics / Engineering',
+    grades: '9–11 классы',
+    format: 'Online / Offline',
+    duration: '90 мин',
+    city: 'Kyzylorda + online',
+    pilot: false,
+    summary: 'Прикладной мастер-класс про энергетику, ВИЭ, накопители энергии и инженерные профессии.',
+    schoolUse: 'Подходит для профориентации, физики и STEM-недели.',
+    teacherIds: [3],
+    schools: ['Regional STEM School']
+  }
+];
+
 const seedOpportunities = [
   { id: 1, pilot: true, title: 'Robotics lesson for Grade 8', school: 'School №125', subject: 'Robotics', grade: '8 класс', format: 'Online', pay: 15000, city: 'Almaty', language: 'Русский', date: '2026-11-20', duration: '60 мин', students: 24, description: 'Практический вводный урок по Arduino и базовой робототехнике.', requirements: 'Опыт работы со школьниками, демонстрационный проект.', status: 'Open' },
   { id: 2, pilot: true, title: 'Guest English speaking club', school: 'NIS partner school', subject: 'English', grade: '9–10 класс', format: 'Online', pay: 20000, city: 'Astana', language: 'English', date: '2026-11-24', duration: '75 мин', students: 18, description: 'Гостевой speaking club с интерактивной дискуссией.', requirements: 'English C1+, опыт проведения speaking clubs.', status: 'Open' },
@@ -105,6 +150,7 @@ function App() {
   const [opportunities, setOpportunities] = useState(() => readLocal('orta_opportunities', seedOpportunities));
   const [applications, setApplications] = useState(() => readLocal('orta_applications', []));
   const [selectedTeacher, setSelectedTeacher] = useState(null);
+  const [selectedProgram, setSelectedProgram] = useState(null);
   const [selectedOpportunity, setSelectedOpportunity] = useState(null);
   const [search, setSearch] = useState('');
   const [teacherFilters, setTeacherFilters] = useState({ city: 'Все', subject: 'Все', mode: 'Все' });
@@ -140,6 +186,7 @@ function App() {
   };
 
   const openTeacher = (teacher) => { setSelectedTeacher(teacher); setPage('teacherProfile'); };
+  const openProgram = (program) => { setSelectedProgram(program); setPage('programDetail'); };
   const openOpportunity = (opp) => { setSelectedOpportunity(opp); setPage('opportunityDetail'); };
 
   const apply = (opp, message = 'Здравствуйте! Мне интересен ваш запрос. Готов обсудить формат занятия.') => {
@@ -226,9 +273,10 @@ function App() {
           <span><b>ORTA</b><small>Opportunity. Resource. Talent. Access.</small></span>
         </button>
         <nav>
-          <button onClick={() => setPage('teachers')}>Таланты</button>
+          <button onClick={() => setPage('programs')}>Уроки и программы</button>
           <button onClick={() => setPage('opportunities')}>Возможности</button>
           <button onClick={() => setPage('schoolProfile')}>Школы</button>
+          <button onClick={() => setPage('partners')}>Партнёрам</button>
           {role !== 'guest' && <button onClick={() => setPage('dashboard')}>Dashboard</button>}
         </nav>
         <div className="auth-actions">
@@ -238,6 +286,9 @@ function App() {
 
       <main>
         {page === 'home' && <Home setPage={setPage} />}
+        {page === 'programs' && <Programs items={seedPrograms} openProgram={openProgram} />}
+        {page === 'programDetail' && selectedProgram && <ProgramDetail program={selectedProgram} teachers={seedTeachers} openTeacher={openTeacher} setPage={setPage} />}
+        {page === 'partners' && <Partners setPage={setPage} />}
         {page === 'teachers' && <Teachers search={search} setSearch={setSearch} filters={teacherFilters} setFilters={setTeacherFilters} items={filteredTeachers} openTeacher={openTeacher} />}
         {page === 'teacherProfile' && selectedTeacher && <TeacherProfile teacher={selectedTeacher} setPage={setPage} />}
         {page === 'opportunities' && <Opportunities items={filteredOpps} filters={oppFilters} setFilters={setOppFilters} openOpportunity={openOpportunity} apply={apply} />}
@@ -259,7 +310,7 @@ function App() {
             </div>
             <p className="dara-greeting">Сәлем! Что хотите найти?</p>
             <div className="dara-actions">
-              <button onClick={() => assistantGo('teachers')}>Найти эксперта</button>
+              <button onClick={() => assistantGo('programs')}>Найти урок / программу</button>
               <button onClick={() => assistantGo('opportunities')}>Найти возможности</button>
               <button onClick={() => assistantGo('schoolProfile')}>Для школы</button>
               <button onClick={() => assistantGo('opportunities')}>STEM / гранты</button>
@@ -294,7 +345,7 @@ function Home({ setPage }) {
         <h1>Возможности образования<br/>не должны зависеть от города.</h1>
         <p>ORTA — сеть образовательных ресурсов для школ. Мы соединяем школы с экспертами, готовыми программами, партнёрами, грантами и другими возможностями, которых может не быть внутри самой школы.</p>
         <div className="hero-actions">
-          <button className="primary big" onClick={() => setPage('opportunities')}>Найти возможности</button>
+          <button className="primary big" onClick={() => setPage('programs')}>Найти урок или программу</button>
           <button className="secondary big" onClick={() => setPage('dashboard')}>Разместить потребность школы</button>
         </div>
         <div className="school-only-note">Для государственных и частных школ · не сервис репетиторов</div>
@@ -316,8 +367,8 @@ function Home({ setPage }) {
       <div className="pillar-grid">
         {[
           ['O','Opportunity','Гранты, форумы, конкурсы, программы компаний','opportunities'],
-          ['R','Resource','Готовые уроки, материалы, оборудование и программы','opportunities'],
-          ['T','Talent','Преподаватели, инженеры, эксперты и студенты','teachers'],
+          ['R','Resource','Готовые уроки, материалы, оборудование и программы','programs'],
+          ['T','Talent','Преподаватели, инженеры, эксперты и студенты','programs'],
           ['A','Access','Доступ к этим ресурсам для любой школы и региона','opportunities']
         ].map(([letter,title,desc,target]) => <button className="pillar-card" key={letter} onClick={() => setPage(target)}>
           <span className="pillar-letter">{letter}</span>
@@ -334,12 +385,12 @@ function Home({ setPage }) {
       </div>
       <div className="needs-grid">
         {[
-          ['👨‍🏫','Пригласить эксперта','Гостевой урок, лекция или мастер-класс','teachers'],
-          ['🔬','Провести STEM-урок','Робототехника, физика, инженерия','opportunities'],
+          ['👨‍🏫','Найти урок с экспертом','Гостевой урок, лекция или мастер-класс','programs'],
+          ['🔬','Провести STEM-урок','Робототехника, физика, инженерия','programs'],
           ['🏫','Найти школу-партнёра','Совместные уроки и обмен опытом','schoolProfile'],
-          ['🎓','Найти программу','Курсы и инициативы компаний','opportunities'],
+          ['🎓','Найти программу','Курсы и инициативы компаний','programs'],
           ['🏆','Грант / конкурс / форум','Внешние образовательные возможности','opportunities'],
-          ['📚','Получить материалы','Готовые уроки и методические ресурсы','opportunities']
+          ['📚','Получить материалы','Готовые уроки и методические ресурсы','programs']
         ].map(([icon,title,desc,target]) => <button className="need-card" key={title} onClick={() => setPage(target)}>
           <span className="need-icon">{icon}</span>
           <div><b>{title}</b><p>{desc}</p></div>
@@ -428,6 +479,29 @@ function Home({ setPage }) {
       <p className="promo-hint">Листайте баннеры →</p>
     </section>
 
+    <section className="impact-section">
+      <div className="impact-copy">
+        <span className="eyebrow">Impact</span>
+        <h2>Наша цель — сократить разрыв в доступе к образовательным возможностям.</h2>
+        <p>В пилоте мы будем измерять не количество профилей, а реальный доступ школ к новым урокам, программам, экспертам и партнёрам.</p>
+      </div>
+      <div className="impact-grid">
+        <div><b>25</b><span>школ — цель пилота</span></div>
+        <div><b>50</b><span>образовательных активностей</span></div>
+        <div><b>1 000+</b><span>учеников — потенциальный охват</span></div>
+      </div>
+      <small className="impact-note">Целевые показатели пилота, не фактические результаты.</small>
+    </section>
+
+    <section className="partner-cta-section">
+      <div>
+        <span className="eyebrow">For partners</span>
+        <h2>Компания, университет или фонд может открыть возможности для школ.</h2>
+        <p>Разместите программу, профинансируйте ORTA Pilot Credits, предложите эксперта, оборудование, экскурсию, конкурс или грант.</p>
+      </div>
+      <button className="primary big" onClick={() => setPage('partners')}>Разместить программу для школ</button>
+    </section>
+
     <section className="school-testimonials">
       <div className="testimonial-heading">
         <div>
@@ -453,6 +527,82 @@ function Home({ setPage }) {
     </section>
   </>
 }
+
+function Programs({ items, openProgram }) {
+  const [query, setQuery] = useState('');
+  const filtered = items.filter(p => `${p.title} ${p.category} ${p.grades} ${p.city}`.toLowerCase().includes(query.toLowerCase()));
+  return <section className="page-section">
+    <div className="section-head">
+      <div><span className="eyebrow">Learning catalog</span><h2>Уроки и программы</h2><p className="muted">Сначала выберите образовательный опыт. Эксперта и школу-партнёра вы увидите уже внутри.</p></div>
+      <input value={query} onChange={e=>setQuery(e.target.value)} placeholder="STEM, English, энергетика..." />
+    </div>
+    <div className="program-grid">
+      {filtered.map(p => <article className="program-card" key={p.id}>
+        <div className="program-top"><span className="program-category">{p.category}</span>{p.pilot && <span className="pilot-badge compact">ORTA Pilot</span>}</div>
+        <h3>{p.title}</h3>
+        <p>{p.summary}</p>
+        <div className="program-meta"><span>{p.grades}</span><span>{p.format}</span><span>{p.duration}</span></div>
+        <button className="primary" onClick={()=>openProgram(p)}>Открыть программу</button>
+      </article>)}
+    </div>
+  </section>
+}
+
+function ProgramDetail({ program, teachers, openTeacher, setPage }) {
+  const availableTeachers = teachers.filter(t => program.teacherIds.includes(t.id));
+  return <section className="page-section">
+    <div className="program-detail-hero">
+      <div>
+        <div className="opp-badges"><span className="program-category">{program.category}</span>{program.pilot && <span className="pilot-badge">🎁 ORTA Pilot</span>}</div>
+        <h2>{program.title}</h2>
+        <p>{program.summary}</p>
+        <div className="program-meta large"><span>{program.grades}</span><span>{program.format}</span><span>{program.duration}</span><span>{program.city}</span></div>
+      </div>
+      <button className="primary big" onClick={()=>setPage('schoolProfile')}>Запросить для школы</button>
+    </div>
+
+    <div className="program-detail-grid">
+      <div className="program-info-card"><h3>Что получает школа</h3><p>{program.schoolUse}</p></div>
+      <div className="program-info-card"><h3>Школы / площадки</h3><div className="clean-list">{program.schools.map(s=><div key={s}>🏫 {s}</div>)}</div></div>
+    </div>
+
+    <h2 className="spaced">Кто может провести</h2>
+    <div className="grid">
+      {availableTeachers.map(t=><article className="card" key={t.id}>
+        <img className="avatar avatar-photo" src={t.avatar} alt={t.name}/>
+        <h3>{t.name}</h3>
+        <p className="muted">{t.subject}</p>
+        <p>★ {t.rating} · {t.experience}</p>
+        <button className="secondary" onClick={()=>openTeacher(t)}>Профиль эксперта</button>
+      </article>)}
+    </div>
+  </section>
+}
+
+function Partners({ setPage }) {
+  return <section className="page-section partners-page">
+    <div className="partners-hero">
+      <span className="eyebrow">Partners</span>
+      <h2>Откройте образовательные возможности для школ через ORTA</h2>
+      <p>Компании, университеты и фонды могут размещать программы, давать экспертов, финансировать Pilot Credits, оборудование, экскурсии, конкурсы и гранты.</p>
+    </div>
+    <div className="partner-options-grid">
+      {[
+        ['100 Pilot Credits','Профинансировать первые уроки для школ'],
+        ['Программа компании','Разместить серию уроков или образовательный курс'],
+        ['Эксперты','Отправить инженеров, специалистов или менторов'],
+        ['Грант / конкурс','Открыть набор заявок для школ'],
+        ['Оборудование','Передать наборы, лаборатории или доступ к ресурсам'],
+        ['Экскурсии','Пригласить школьников на предприятие или в университет']
+      ].map(([t,d])=><article key={t}><h3>{t}</h3><p>{d}</p></article>)}
+    </div>
+    <div className="partner-form-demo">
+      <div><b>Демо-заявка партнёра</b><span>На MVP пока без отправки данных</span></div>
+      <button className="primary" onClick={()=>setPage('home')}>Вернуться на главную</button>
+    </div>
+  </section>
+}
+
 
 function Teachers({ search, setSearch, filters, setFilters, items, openTeacher }) {
   return <section className="page-section">
