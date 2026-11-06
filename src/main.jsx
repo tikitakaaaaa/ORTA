@@ -276,6 +276,7 @@ function App() {
           <button onClick={() => setPage('programs')}>Уроки и программы</button>
           <button onClick={() => setPage('opportunities')}>Возможности</button>
           <button onClick={() => setPage('schoolProfile')}>Школы</button>
+          <button onClick={() => setPage('about')}>О нас</button>
           <button onClick={() => setPage('partners')}>Партнёрам</button>
           {role !== 'guest' && <button onClick={() => setPage('dashboard')}>Dashboard</button>}
         </nav>
@@ -288,6 +289,7 @@ function App() {
         {page === 'home' && <Home setPage={setPage} />}
         {page === 'programs' && <Programs items={seedPrograms} openProgram={openProgram} />}
         {page === 'programDetail' && selectedProgram && <ProgramDetail program={selectedProgram} teachers={seedTeachers} openTeacher={openTeacher} setPage={setPage} />}
+        {page === 'about' && <AboutRoadmap setPage={setPage} />}
         {page === 'partners' && <Partners setPage={setPage} />}
         {page === 'teachers' && <Teachers search={search} setSearch={setSearch} filters={teacherFilters} setFilters={setTeacherFilters} items={filteredTeachers} openTeacher={openTeacher} />}
         {page === 'teacherProfile' && selectedTeacher && <TeacherProfile teacher={selectedTeacher} setPage={setPage} />}
@@ -493,6 +495,15 @@ function Home({ setPage }) {
       <small className="impact-note">Целевые показатели пилота, не фактические результаты.</small>
     </section>
 
+    <section className="roadmap-teaser">
+      <div>
+        <span className="eyebrow">Roadmap</span>
+        <h2>Смотрите, как ORTA растёт — и что откроется школам дальше.</h2>
+        <p>От интерактивного MVP и первого пилота до партнёрских программ и региональной сети.</p>
+      </div>
+      <button className="secondary big" onClick={() => setPage('about')}>Открыть путь ORTA →</button>
+    </section>
+
     <section className="partner-cta-section">
       <div>
         <span className="eyebrow">For partners</span>
@@ -575,6 +586,126 @@ function ProgramDetail({ program, teachers, openTeacher, setPage }) {
         <p>★ {t.rating} · {t.experience}</p>
         <button className="secondary" onClick={()=>openTeacher(t)}>Профиль эксперта</button>
       </article>)}
+    </div>
+  </section>
+}
+
+
+function AboutRoadmap({ setPage }) {
+  const [activeStep, setActiveStep] = useState(2);
+  const milestones = [
+    {
+      status: 'done',
+      label: 'Сделано',
+      period: 'Этап 01',
+      title: 'Концепция ORTA',
+      metric: 'School-first',
+      description: 'Сформировали модель платформы вокруг потребностей школ, а не поиска репетиторов.',
+      benefit: 'Школа получает единый вход к урокам, программам, экспертам и возможностям.'
+    },
+    {
+      status: 'done',
+      label: 'Сделано',
+      period: 'Этап 02',
+      title: 'Интерактивный MVP',
+      metric: 'Рабочий прототип',
+      description: 'Собрали каталог программ, ORTA Pilot, карту возможностей, профили и партнёрский сценарий.',
+      benefit: 'Школа уже может понять путь: выбрать программу → увидеть эксперта → попробовать Pilot.'
+    },
+    {
+      status: 'now',
+      label: 'Сейчас',
+      period: 'Этап 03',
+      title: 'Пилот со школами',
+      metric: '25 школ',
+      description: 'Интервью, первые реальные школы, тестирование уроков и сбор обратной связи.',
+      benefit: 'Школы получают первые реальные занятия и влияют на то, каким станет ORTA.'
+    },
+    {
+      status: 'goal',
+      label: 'Цель',
+      period: 'Этап 04',
+      title: 'Партнёрские программы',
+      metric: '100+ Pilot Credits',
+      description: 'Подключение компаний, университетов и фондов, которые финансируют программы для школ.',
+      benefit: 'Больше бесплатных уроков, экспертов, конкурсов, оборудования и образовательных программ.'
+    },
+    {
+      status: 'goal',
+      label: 'Цель',
+      period: 'Этап 05',
+      title: 'Региональная сеть',
+      metric: '500 школ',
+      description: 'Масштабирование ORTA по регионам Казахстана и развитие межшкольного обмена.',
+      benefit: 'Школа получает доступ к возможностям вне зависимости от своего города.'
+    },
+    {
+      status: 'vision',
+      label: 'Видение',
+      period: 'Этап 06',
+      title: 'Национальная экосистема',
+      metric: '2 000 школ',
+      description: 'Сеть школ, партнёров и программ с измеримым образовательным impact по стране.',
+      benefit: 'Один доступ к национальной сети уроков, экспертов, программ и партнёров.'
+    }
+  ];
+
+  const current = milestones[activeStep];
+
+  return <section className="page-section about-roadmap-page">
+    <div className="about-roadmap-hero">
+      <div>
+        <span className="eyebrow">About ORTA</span>
+        <h2>Путь ORTA</h2>
+        <p>Мы показываем не только то, что уже сделали, но и куда идём дальше — и что каждый этап открывает для школ.</p>
+      </div>
+      <button className="secondary" onClick={() => setPage('programs')}>Посмотреть программы</button>
+    </div>
+
+    <div className="roadmap-legend">
+      <span><i className="legend-dot done"></i> Сделано</span>
+      <span><i className="legend-dot now"></i> Сейчас</span>
+      <span><i className="legend-dot goal"></i> Цель</span>
+      <span><i className="legend-dot vision"></i> Видение</span>
+    </div>
+
+    <div className="roadmap-track-wrap">
+      <div className="roadmap-track">
+        {milestones.map((m, i) => <button
+          key={m.title}
+          className={"roadmap-node " + m.status + (i === activeStep ? " active" : "")}
+          onClick={() => setActiveStep(i)}
+        >
+          <span className="roadmap-orbit"></span>
+          <span className="roadmap-dot"></span>
+          <small>{m.period}</small>
+          <b>{m.title}</b>
+          <em>{m.metric}</em>
+        </button>)}
+      </div>
+    </div>
+
+    <div className={"roadmap-detail " + current.status}>
+      <div className="roadmap-detail-main">
+        <div className="roadmap-detail-top">
+          <span className={"roadmap-status " + current.status}>{current.label}</span>
+          <span>{current.period}</span>
+        </div>
+        <h3>{current.title}</h3>
+        <p>{current.description}</p>
+      </div>
+      <div className="roadmap-metric">
+        <small>Ориентир этапа</small>
+        <b>{current.metric}</b>
+      </div>
+      <div className="roadmap-benefit">
+        <small>Что получает школа</small>
+        <p>{current.benefit}</p>
+      </div>
+    </div>
+
+    <div className="roadmap-disclaimer">
+      <b>Важно:</b> этапы 04–06 — целевые ориентиры развития ORTA. Партнёрства и масштабы будут отмечаться как достигнутые только после фактической реализации.
     </div>
   </section>
 }
