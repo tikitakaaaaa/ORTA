@@ -98,6 +98,7 @@ const readLocal = (key, fallback) => {
 
 function App() {
   const [page, setPage] = useState('home');
+  const [assistantOpen, setAssistantOpen] = useState(false);
   const [role, setRole] = useState(localStorage.getItem('orta_role') || 'guest');
   const [opportunities, setOpportunities] = useState(() => readLocal('orta_opportunities', seedOpportunities));
   const [applications, setApplications] = useState(() => readLocal('orta_applications', []));
@@ -191,6 +192,12 @@ function App() {
     e.currentTarget.reset();
   };
 
+  const assistantGo = (target) => {
+    setPage(target);
+    setAssistantOpen(false);
+  };
+
+
   return (
     <div className="app-shell">
       <header className="topbar">
@@ -236,6 +243,40 @@ function App() {
         {page === 'login' && <Login login={login} />}
         {page === 'dashboard' && <Dashboard role={role} opportunities={opportunities} applications={applications} createOpportunity={createOpportunity} updateApplicationStatus={updateApplicationStatus} openOpportunity={openOpportunity} />}
       </main>
+
+      <div className="dara-assistant">
+        {assistantOpen && (
+          <div className="dara-panel">
+            <div className="dara-panel-head">
+              <div>
+                <b>Dara by ORTA</b>
+                <span>Помогу сориентироваться</span>
+              </div>
+              <button className="dara-close" onClick={() => setAssistantOpen(false)} aria-label="Закрыть">×</button>
+            </div>
+            <p className="dara-greeting">Сәлем! Что хотите найти?</p>
+            <div className="dara-actions">
+              <button onClick={() => assistantGo('teachers')}>Найти преподавателя</button>
+              <button onClick={() => assistantGo('opportunities')}>Найти занятие</button>
+              <button onClick={() => assistantGo('schoolProfile')}>Для школы</button>
+              <button onClick={() => assistantGo('opportunities')}>Робототехника / STEM</button>
+            </div>
+            <small className="dara-note">Демо-помощник · AI подключим позже</small>
+          </div>
+        )}
+        <button
+          className={"dara-bot" + (assistantOpen ? " is-open" : "")}
+          onClick={() => setAssistantOpen(v => !v)}
+          aria-label="Открыть помощника Dara"
+        >
+          <span className="dara-board-face">
+            <span className="dara-eye left"></span>
+            <span className="dara-eye right"></span>
+            <span className="dara-smile"></span>
+          </span>
+          <span className="dara-shanyrak">⌾</span>
+        </button>
+      </div>
 
       <footer>ORTA MVP · Education access platform · 2026</footer>
     </div>
