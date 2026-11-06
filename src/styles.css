@@ -414,7 +414,9 @@ footer{padding:30px 7vw;color:#778995;border-top:1px solid var(--border);backgro
   .features,.grid{grid-template-columns:1fr}
   .program-grid,.partner-options-grid{grid-template-columns:1fr 1fr}
   .program-detail-grid{grid-template-columns:1fr}
-  .program-detail-hero,.partner-cta-section{align-items:flex-start;flex-direction:column}
+  .program-detail-hero,.partner-cta-section,.about-roadmap-hero,.roadmap-teaser{align-items:flex-start;flex-direction:column}
+  .roadmap-detail{grid-template-columns:1fr}
+  .roadmap-metric,.roadmap-benefit{border-left:0;border-top:1px solid var(--border);padding-left:0;padding-top:16px}
   .impact-grid{grid-template-columns:1fr}
   .pillar-grid{grid-template-columns:1fr 1fr}
   .needs-grid{grid-template-columns:1fr 1fr}
@@ -455,7 +457,8 @@ footer{padding:30px 7vw;color:#778995;border-top:1px solid var(--border);backgro
   .hero{padding:54px 22px}
   .hero h1{font-size:42px}
   .hero-panel{grid-template-columns:1fr}
-  .page-section,.features,.promo-section,.how-it-works,.orta-pillars,.school-needs,.pilot-section{padding-left:22px;padding-right:22px}
+  .page-section,.features,.promo-section,.how-it-works,.orta-pillars,.school-needs,.pilot-section,.roadmap-teaser{padding-left:22px;padding-right:22px}
+  .about-roadmap-hero h2{font-size:40px!important}
   .pilot-wallet{flex-direction:column}
   .pilot-balance{text-align:left}
   .pillar-grid,.needs-grid,.program-grid,.partner-options-grid{grid-template-columns:1fr}
@@ -492,6 +495,37 @@ footer{padding:30px 7vw;color:#778995;border-top:1px solid var(--border);backgro
 .partners-page{background:#f7fafb}.partners-hero{max-width:900px}.partners-hero h2{font-size:46px!important}.partners-hero p{font-size:18px;color:#60727f;line-height:1.7}
 .partner-options-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:30px}.partner-options-grid article{background:#fff;border:1px solid var(--border);border-radius:20px;padding:21px}.partner-options-grid h3{margin:0 0 8px;color:var(--navy)}.partner-options-grid p{margin:0;color:#71828d;line-height:1.5}
 .partner-form-demo{margin-top:24px;background:var(--navy);color:#fff;border-radius:22px;padding:20px;display:flex;justify-content:space-between;gap:18px;align-items:center}.partner-form-demo div{display:grid;gap:3px}.partner-form-demo span{color:#b9ccd4;font-size:13px}
+
+
+.about-roadmap-page{background:linear-gradient(180deg,#f8fbfc 0%,#eef6f7 100%)}
+.about-roadmap-hero{display:flex;justify-content:space-between;gap:24px;align-items:end;max-width:1100px}
+.about-roadmap-hero h2{font-size:52px!important;margin:0 0 10px!important}
+.about-roadmap-hero p{max-width:760px;color:#60727f;font-size:18px;line-height:1.65}
+.roadmap-legend{display:flex;gap:18px;flex-wrap:wrap;margin:32px 0 12px;color:#6d7e89;font-size:12px;font-weight:800}
+.roadmap-legend span{display:flex;align-items:center;gap:7px}
+.legend-dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.legend-dot.done{background:var(--teal)}.legend-dot.now{background:var(--yellow)}.legend-dot.goal{background:#8ba6b3}.legend-dot.vision{background:#b8c7ce}
+.roadmap-track-wrap{overflow-x:auto;padding:18px 4px 28px;scrollbar-width:thin;scrollbar-color:#c5d7de transparent}
+.roadmap-track{position:relative;display:grid;grid-template-columns:repeat(6,minmax(180px,1fr));gap:0;min-width:1080px}
+.roadmap-track:before{content:"";position:absolute;left:8%;right:8%;top:34px;height:3px;background:linear-gradient(90deg,var(--teal) 0 39%,var(--yellow) 39% 52%,#b6c7cf 52% 100%);border-radius:99px}
+.roadmap-node{position:relative;border:0;background:transparent;padding:0 12px 12px;text-align:center;cursor:pointer;color:var(--navy);display:grid;justify-items:center;gap:5px}
+.roadmap-node:hover{transform:translateY(-2px)}
+.roadmap-dot{position:relative;z-index:2;width:22px;height:22px;border-radius:50%;background:#fff;border:5px solid #a8bac3;box-shadow:0 0 0 5px rgba(255,255,255,.85);margin-top:23px;margin-bottom:12px}
+.roadmap-node.done .roadmap-dot{border-color:var(--teal)}.roadmap-node.now .roadmap-dot{border-color:var(--yellow)}.roadmap-node.goal .roadmap-dot{border-color:#8ba6b3}.roadmap-node.vision .roadmap-dot{border-color:#b8c7ce}
+.roadmap-node.active .roadmap-dot{transform:scale(1.2);box-shadow:0 0 0 8px rgba(22,125,127,.12)}
+.roadmap-node.now.active .roadmap-dot{box-shadow:0 0 0 8px rgba(244,201,93,.2)}
+.roadmap-orbit{position:absolute;top:14px;width:62px;height:62px;border:1px dashed rgba(22,125,127,.22);border-radius:50%;opacity:0;transition:.2s ease}
+.roadmap-node.active .roadmap-orbit{opacity:1}
+.roadmap-node small{color:#8a99a3;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.08em}
+.roadmap-node b{font-size:13px;max-width:160px}.roadmap-node em{font-size:11px;color:var(--teal);font-style:normal;font-weight:900}
+.roadmap-detail{display:grid;grid-template-columns:1.4fr .55fr .9fr;gap:16px;background:#fff;border:1px solid var(--border);border-radius:24px;padding:24px;box-shadow:0 14px 35px rgba(18,50,74,.07)}
+.roadmap-detail-main h3{font-size:28px;margin:12px 0 8px;color:var(--navy)}.roadmap-detail-main p{margin:0;color:#60727f;line-height:1.6}
+.roadmap-detail-top{display:flex;gap:10px;align-items:center;color:#8a99a3;font-size:12px}
+.roadmap-status{font-weight:900;border-radius:999px;padding:6px 9px}.roadmap-status.done{background:var(--teal-soft);color:var(--teal)}.roadmap-status.now{background:var(--yellow-soft);color:#8a6517}.roadmap-status.goal,.roadmap-status.vision{background:#eef3f5;color:#617580}
+.roadmap-metric,.roadmap-benefit{border-left:1px solid var(--border);padding-left:18px;display:flex;flex-direction:column;justify-content:center}
+.roadmap-metric small,.roadmap-benefit small{color:#8a99a3;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.08em}.roadmap-metric b{font-size:30px;color:var(--navy);margin-top:7px}.roadmap-benefit p{color:#526673;line-height:1.5;margin:7px 0 0}
+.roadmap-disclaimer{margin-top:16px;background:#fff7df;border:1px solid #efd889;border-radius:16px;padding:14px 16px;color:#765c1d;font-size:13px;line-height:1.5}
+.roadmap-teaser{padding:46px 7vw;background:#fff;display:flex;justify-content:space-between;gap:24px;align-items:center}.roadmap-teaser h2{font-size:34px;margin:0 0 10px;color:var(--navy);max-width:760px}.roadmap-teaser p{margin:0;color:#657783;max-width:760px;line-height:1.55}
 
 .teacher-sidebar{display:grid;gap:18px}
 .profile-identity{display:flex;align-items:center;gap:16px}
