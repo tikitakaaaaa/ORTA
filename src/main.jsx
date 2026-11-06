@@ -197,9 +197,20 @@ function App() {
         <button className="brand" onClick={() => setPage('home')}>
           <span className="brand-mark" aria-hidden="true">
             <svg className="shanyrak-logo" viewBox="0 0 64 64">
-              <circle cx="32" cy="32" r="20" fill="none" stroke="currentColor" strokeWidth="4.5"/>
-              <circle cx="32" cy="32" r="7.5" fill="none" stroke="currentColor" strokeWidth="4"/>
-              <path d="M32 12v12M32 40v12M12 32h12M40 32h12M18 18l8.5 8.5M37.5 37.5L46 46M46 18l-8.5 8.5M26.5 37.5L18 46" fill="none" stroke="currentColor" strokeWidth="3.6" strokeLinecap="round"/>
+              <defs>
+                <clipPath id="shanyrakClip">
+                  <circle cx="32" cy="32" r="19"/>
+                </clipPath>
+              </defs>
+              <circle cx="32" cy="32" r="20.5" fill="none" stroke="currentColor" strokeWidth="4.5"/>
+              <g clipPath="url(#shanyrakClip)" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round">
+                <path d="M18 24 C24 29, 40 29, 46 24"/>
+                <path d="M17 32 C24 36, 40 36, 47 32"/>
+                <path d="M18 40 C24 35, 40 35, 46 40"/>
+                <path d="M24 18 C29 24, 29 40, 24 46"/>
+                <path d="M32 17 C36 24, 36 40, 32 47"/>
+                <path d="M40 18 C35 24, 35 40, 40 46"/>
+              </g>
             </svg>
           </span>
           <span><b>ORTA</b><small>Opportunity. Resource. Talent. Access.</small></span>
