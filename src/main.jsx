@@ -1,29 +1,60 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './styles.css';
 
-const teachers = [
-  { id: 1, name: 'Aigerim S.', subject: 'Robotics & STEM', city: 'Almaty', mode: 'Online / Offline', rating: 4.9, tags: ['Arduino', 'Robotics', 'STEM'] },
-  { id: 2, name: 'Dias K.', subject: 'English', city: 'Astana', mode: 'Online', rating: 4.8, tags: ['IELTS', 'Speaking', 'Academic'] },
-  { id: 3, name: 'Madina T.', subject: 'Physics', city: 'Kyzylorda', mode: 'Online', rating: 4.7, tags: ['Physics', 'Olympiad', 'Grades 7–11'] },
+const seedTeachers = [
+  { id: 1, name: 'Aigerim S.', subject: 'Robotics & STEM', city: 'Almaty', mode: 'Online / Offline', rating: 4.9, price: 15000, languages: ['Қазақша','Русский','English'], experience: '6 лет', bio: 'Провожу практические занятия по робототехнике, Arduino и STEM для 5–11 классов.', tags: ['Arduino', 'Robotics', 'STEM'] },
+  { id: 2, name: 'Dias K.', subject: 'English', city: 'Astana', mode: 'Online', rating: 4.8, price: 12000, languages: ['English','Русский'], experience: '5 лет', bio: 'IELTS, speaking clubs и академический английский для школьников.', tags: ['IELTS', 'Speaking', 'Academic'] },
+  { id: 3, name: 'Madina T.', subject: 'Physics', city: 'Kyzylorda', mode: 'Online', rating: 4.7, price: 10000, languages: ['Қазақша','Русский'], experience: '7 лет', bio: 'Физика, олимпиадная подготовка и мастер-классы для 7–11 классов.', tags: ['Physics', 'Olympiad', 'Grades 7–11'] },
 ];
 
-const initialOpportunities = [
-  { id: 1, title: 'Robotics lesson for Grade 8', school: 'School №125', format: 'Online', pay: '15 000 ₸', city: 'Almaty', status: 'Open' },
-  { id: 2, title: 'Guest English speaking club', school: 'NIS partner school', format: 'Online', pay: '20 000 ₸', city: 'Astana', status: 'Open' },
-  { id: 3, title: 'Physics masterclass', school: 'Regional school', format: 'Offline', pay: '25 000 ₸', city: 'Kyzylorda', status: 'Open' },
+const seedOpportunities = [
+  { id: 1, title: 'Robotics lesson for Grade 8', school: 'School №125', subject: 'Robotics', grade: '8 класс', format: 'Online', pay: 15000, city: 'Almaty', language: 'Русский', date: '2026-11-20', duration: '60 мин', students: 24, description: 'Практический вводный урок по Arduino и базовой робототехнике.', requirements: 'Опыт работы со школьниками, демонстрационный проект.', status: 'Open' },
+  { id: 2, title: 'Guest English speaking club', school: 'NIS partner school', subject: 'English', grade: '9–10 класс', format: 'Online', pay: 20000, city: 'Astana', language: 'English', date: '2026-11-24', duration: '75 мин', students: 18, description: 'Гостевой speaking club с интерактивной дискуссией.', requirements: 'English C1+, опыт проведения speaking clubs.', status: 'Open' },
+  { id: 3, title: 'Physics masterclass', school: 'Regional school', subject: 'Physics', grade: '10 класс', format: 'Offline', pay: 25000, city: 'Kyzylorda', language: 'Қазақша', date: '2026-11-28', duration: '90 мин', students: 30, description: 'Мастер-класс по прикладной физике и энергетике.', requirements: 'Опыт преподавания физики или инженерное образование.', status: 'Open' },
 ];
+
+const demoSchool = {
+  id: 'school-demo',
+  name: 'ORTA Demo School',
+  city: 'Almaty',
+  students: 620,
+  website: 'school.orta.kz',
+  about: 'Школа, открытая для приглашённых преподавателей, совместных уроков и образовательных проектов.',
+  verified: true
+};
+
+const readLocal = (key, fallback) => {
+  try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; }
+};
 
 function App() {
   const [page, setPage] = useState('home');
   const [role, setRole] = useState(localStorage.getItem('orta_role') || 'guest');
-  const [opportunities, setOpportunities] = useState(initialOpportunities);
-  const [applications, setApplications] = useState([]);
+  const [opportunities, setOpportunities] = useState(() => readLocal('orta_opportunities', seedOpportunities));
+  const [applications, setApplications] = useState(() => readLocal('orta_applications', []));
+  const [selectedTeacher, setSelectedTeacher] = useState(null);
+  const [selectedOpportunity, setSelectedOpportunity] = useState(null);
   const [search, setSearch] = useState('');
+  const [teacherFilters, setTeacherFilters] = useState({ city: 'Все', subject: 'Все', mode: 'Все' });
+  const [oppFilters, setOppFilters] = useState({ city: 'Все', subject: 'Все', format: 'Все' });
 
-  const filteredTeachers = useMemo(() => teachers.filter(t =>
-    `${t.name} ${t.subject} ${t.city} ${t.tags.join(' ')}`.toLowerCase().includes(search.toLowerCase())
-  ), [search]);
+  useEffect(() => localStorage.setItem('orta_opportunities', JSON.stringify(opportunities)), [opportunities]);
+  useEffect(() => localStorage.setItem('orta_applications', JSON.stringify(applications)), [applications]);
+
+  const filteredTeachers = useMemo(() => seedTeachers.filter(t => {
+    const q = `${t.name} ${t.subject} ${t.city} ${t.tags.join(' ')}`.toLowerCase();
+    return q.includes(search.toLowerCase())
+      && (teacherFilters.city === 'Все' || t.city === teacherFilters.city)
+      && (teacherFilters.subject === 'Все' || t.subject.includes(teacherFilters.subject))
+      && (teacherFilters.mode === 'Все' || t.mode.includes(teacherFilters.mode));
+  }), [search, teacherFilters]);
+
+  const filteredOpps = useMemo(() => opportunities.filter(o =>
+    (oppFilters.city === 'Все' || o.city === oppFilters.city) &&
+    (oppFilters.subject === 'Все' || o.subject === oppFilters.subject) &&
+    (oppFilters.format === 'Все' || o.format === oppFilters.format)
+  ), [opportunities, oppFilters]);
 
   const login = (newRole) => {
     setRole(newRole);
@@ -37,13 +68,35 @@ function App() {
     setPage('home');
   };
 
-  const apply = (opp) => {
+  const openTeacher = (teacher) => { setSelectedTeacher(teacher); setPage('teacherProfile'); };
+  const openOpportunity = (opp) => { setSelectedOpportunity(opp); setPage('opportunityDetail'); };
+
+  const apply = (opp, message = 'Здравствуйте! Мне интересен ваш запрос. Готов обсудить формат занятия.') => {
     if (role !== 'teacher') {
-      alert('Для отклика войдите как преподаватель.');
+      alert('Для отклика войдите в демо как преподаватель.');
       setPage('login');
       return;
     }
-    if (!applications.some(a => a.id === opp.id)) setApplications([...applications, opp]);
+    if (applications.some(a => a.opportunityId === opp.id)) {
+      alert('Вы уже откликнулись на это объявление.');
+      return;
+    }
+    setApplications(prev => [{
+      id: Date.now(),
+      opportunityId: opp.id,
+      teacherId: 1,
+      teacherName: 'Aigerim S.',
+      school: opp.school,
+      title: opp.title,
+      message,
+      status: 'Pending',
+      createdAt: new Date().toISOString()
+    }, ...prev]);
+    alert('Отклик отправлен.');
+  };
+
+  const updateApplicationStatus = (id, status) => {
+    setApplications(prev => prev.map(a => a.id === id ? { ...a, status } : a));
   };
 
   const createOpportunity = (e) => {
@@ -52,13 +105,21 @@ function App() {
     const newOpp = {
       id: Date.now(),
       title: data.get('title'),
-      school: data.get('school') || 'My School',
+      school: data.get('school') || demoSchool.name,
+      subject: data.get('subject'),
+      grade: data.get('grade'),
       format: data.get('format'),
-      pay: `${data.get('pay')} ₸`,
+      pay: Number(data.get('pay')),
       city: data.get('city'),
+      language: data.get('language'),
+      date: data.get('date'),
+      duration: data.get('duration'),
+      students: Number(data.get('students')),
+      description: data.get('description'),
+      requirements: data.get('requirements'),
       status: 'Open'
     };
-    setOpportunities([newOpp, ...opportunities]);
+    setOpportunities(prev => [newOpp, ...prev]);
     e.currentTarget.reset();
   };
 
@@ -72,19 +133,23 @@ function App() {
         <nav>
           <button onClick={() => setPage('teachers')}>Преподаватели</button>
           <button onClick={() => setPage('opportunities')}>Возможности</button>
+          <button onClick={() => setPage('schoolProfile')}>Школы</button>
           {role !== 'guest' && <button onClick={() => setPage('dashboard')}>Dashboard</button>}
         </nav>
         <div className="auth-actions">
-          {role === 'guest' ? <button className="primary" onClick={() => setPage('login')}>Войти</button> : <button className="ghost" onClick={logout}>Выйти</button>}
+          {role === 'guest' ? <button className="primary" onClick={() => setPage('login')}>Демо-вход</button> : <button className="ghost" onClick={logout}>Выйти</button>}
         </div>
       </header>
 
       <main>
         {page === 'home' && <Home setPage={setPage} />}
-        {page === 'teachers' && <Teachers search={search} setSearch={setSearch} items={filteredTeachers} />}
-        {page === 'opportunities' && <Opportunities items={opportunities} apply={apply} />}
+        {page === 'teachers' && <Teachers search={search} setSearch={setSearch} filters={teacherFilters} setFilters={setTeacherFilters} items={filteredTeachers} openTeacher={openTeacher} />}
+        {page === 'teacherProfile' && selectedTeacher && <TeacherProfile teacher={selectedTeacher} setPage={setPage} />}
+        {page === 'opportunities' && <Opportunities items={filteredOpps} filters={oppFilters} setFilters={setOppFilters} openOpportunity={openOpportunity} apply={apply} />}
+        {page === 'opportunityDetail' && selectedOpportunity && <OpportunityDetail opp={selectedOpportunity} apply={apply} />}
+        {page === 'schoolProfile' && <SchoolProfile school={demoSchool} opportunities={opportunities} openOpportunity={openOpportunity} />}
         {page === 'login' && <Login login={login} />}
-        {page === 'dashboard' && <Dashboard role={role} opportunities={opportunities} applications={applications} createOpportunity={createOpportunity} />}
+        {page === 'dashboard' && <Dashboard role={role} opportunities={opportunities} applications={applications} createOpportunity={createOpportunity} updateApplicationStatus={updateApplicationStatus} openOpportunity={openOpportunity} />}
       </main>
 
       <footer>ORTA MVP · Education access platform · 2026</footer>
@@ -111,49 +176,81 @@ function Home({ setPage }) {
       </div>
     </section>
     <section className="features">
-      {[
-        ['Для школ','Публикуйте запросы, приглашайте учителей, находите готовые занятия.'],
-        ['Для учителей','Создавайте профиль, находите школы и оплачиваемые занятия.'],
-        ['Для регионов','Доступ к экспертам вне зависимости от города и размера школы.']
-      ].map(([t,d]) => <article key={t}><h3>{t}</h3><p>{d}</p></article>)}
+      {[['Для школ','Публикуйте запросы, приглашайте учителей, находите готовые занятия.'],['Для учителей','Создавайте профиль, находите школы и оплачиваемые занятия.'],['Для регионов','Доступ к экспертам вне зависимости от города и размера школы.']].map(([t,d]) => <article key={t}><h3>{t}</h3><p>{d}</p></article>)}
     </section>
   </>
 }
 
-function Teachers({ search, setSearch, items }) {
+function Teachers({ search, setSearch, filters, setFilters, items, openTeacher }) {
   return <section className="page-section">
     <div className="section-head"><div><span className="eyebrow">Talent network</span><h2>Преподаватели</h2></div><input placeholder="Поиск: Robotics, Physics, Almaty..." value={search} onChange={e => setSearch(e.target.value)} /></div>
+    <div className="filters">
+      <select value={filters.city} onChange={e => setFilters({...filters, city:e.target.value})}><option>Все</option><option>Almaty</option><option>Astana</option><option>Kyzylorda</option></select>
+      <select value={filters.subject} onChange={e => setFilters({...filters, subject:e.target.value})}><option>Все</option><option>Robotics</option><option>English</option><option>Physics</option></select>
+      <select value={filters.mode} onChange={e => setFilters({...filters, mode:e.target.value})}><option>Все</option><option>Online</option><option>Offline</option></select>
+    </div>
     <div className="grid">{items.map(t => <article className="card" key={t.id}>
-      <div className="avatar">{t.name[0]}</div><h3>{t.name}</h3><p className="muted">{t.subject}</p><p>{t.city} · {t.mode}</p><p>★ {t.rating}</p><div className="tags">{t.tags.map(tag => <span key={tag}>{tag}</span>)}</div><button className="secondary">Открыть профиль</button>
+      <div className="avatar">{t.name[0]}</div><h3>{t.name}</h3><p className="muted">{t.subject}</p><p>{t.city} · {t.mode}</p><p>★ {t.rating} · от {t.price.toLocaleString('ru-RU')} ₸</p><div className="tags">{t.tags.map(tag => <span key={tag}>{tag}</span>)}</div><button className="secondary" onClick={() => openTeacher(t)}>Открыть профиль</button>
     </article>)}</div>
   </section>
 }
 
-function Opportunities({ items, apply }) {
+function TeacherProfile({ teacher, setPage }) {
+  return <section className="page-section profile-layout">
+    <aside className="profile-card"><div className="avatar large">{teacher.name[0]}</div><h2>{teacher.name}</h2><p className="muted">{teacher.subject}</p><p>★ {teacher.rating}</p><p>{teacher.city}</p><p>{teacher.mode}</p><b>от {teacher.price.toLocaleString('ru-RU')} ₸ / занятие</b></aside>
+    <div className="profile-main"><span className="eyebrow">Teacher profile</span><h2>О преподавателе</h2><p>{teacher.bio}</p><h3>Опыт</h3><p>{teacher.experience}</p><h3>Языки</h3><div className="tags">{teacher.languages.map(x => <span key={x}>{x}</span>)}</div><h3>Навыки</h3><div className="tags">{teacher.tags.map(x => <span key={x}>{x}</span>)}</div><button className="primary" onClick={() => setPage('opportunities')}>Посмотреть возможности</button></div>
+  </section>
+}
+
+function Opportunities({ items, filters, setFilters, openOpportunity, apply }) {
   return <section className="page-section">
     <div className="section-head"><div><span className="eyebrow">Open requests</span><h2>Возможности</h2></div></div>
+    <div className="filters">
+      <select value={filters.city} onChange={e => setFilters({...filters, city:e.target.value})}><option>Все</option><option>Almaty</option><option>Astana</option><option>Kyzylorda</option></select>
+      <select value={filters.subject} onChange={e => setFilters({...filters, subject:e.target.value})}><option>Все</option><option>Robotics</option><option>English</option><option>Physics</option></select>
+      <select value={filters.format} onChange={e => setFilters({...filters, format:e.target.value})}><option>Все</option><option>Online</option><option>Offline</option><option>Hybrid</option></select>
+    </div>
     <div className="list">{items.map(o => <article className="opportunity" key={o.id}>
-      <div><span className="status">{o.status}</span><h3>{o.title}</h3><p className="muted">{o.school} · {o.city} · {o.format}</p></div>
-      <div className="opp-side"><b>{o.pay}</b><button className="primary" onClick={() => apply(o)}>Откликнуться</button></div>
+      <div><span className="status">{o.status}</span><h3>{o.title}</h3><p className="muted">{o.school} · {o.city} · {o.format}</p><p>{o.subject} · {o.grade} · {o.language}</p></div>
+      <div className="opp-side"><b>{o.pay.toLocaleString('ru-RU')} ₸</b><button className="secondary" onClick={() => openOpportunity(o)}>Подробнее</button><button className="primary" onClick={() => apply(o)}>Откликнуться</button></div>
     </article>)}</div>
   </section>
+}
+
+function OpportunityDetail({ opp, apply }) {
+  const [message, setMessage] = useState('Здравствуйте! Мне интересен ваш запрос. Готов обсудить формат занятия.');
+  return <section className="page-section detail-page"><div><span className="status">{opp.status}</span><h2>{opp.title}</h2><p className="muted">{opp.school} · {opp.city}</p><div className="detail-grid"><div><b>Предмет</b><span>{opp.subject}</span></div><div><b>Класс</b><span>{opp.grade}</span></div><div><b>Формат</b><span>{opp.format}</span></div><div><b>Дата</b><span>{opp.date || 'По согласованию'}</span></div><div><b>Длительность</b><span>{opp.duration}</span></div><div><b>Учеников</b><span>{opp.students}</span></div><div><b>Язык</b><span>{opp.language}</span></div><div><b>Оплата</b><span>{opp.pay.toLocaleString('ru-RU')} ₸</span></div></div><h3>Описание</h3><p>{opp.description}</p><h3>Требования</h3><p>{opp.requirements}</p></div>
+    <aside className="apply-card"><h3>Откликнуться</h3><textarea rows="6" value={message} onChange={e=>setMessage(e.target.value)} /><button className="primary full" onClick={() => apply(opp, message)}>Отправить отклик</button></aside></section>
+}
+
+function SchoolProfile({ school, opportunities, openOpportunity }) {
+  return <section className="page-section"><div className="school-head"><div><span className="eyebrow">School profile</span><h2>{school.name} {school.verified && <span className="verified">✓</span>}</h2><p>{school.city} · {school.students} учеников · {school.website}</p><p>{school.about}</p></div></div><h2 className="spaced">Открытые запросы</h2><div className="list">{opportunities.slice(0,4).map(o=><article className="opportunity" key={o.id}><div><h3>{o.title}</h3><p className="muted">{o.city} · {o.format}</p></div><button className="secondary" onClick={()=>openOpportunity(o)}>Подробнее</button></article>)}</div></section>
 }
 
 function Login({ login }) {
-  return <section className="login-wrap"><div className="login-card"><span className="eyebrow">Demo access</span><h2>Войти в ORTA</h2><p>Пока это демо-режим без сервера. Выбери роль — позже заменим на реальную регистрацию через Supabase.</p><button className="primary big full" onClick={() => login('teacher')}>Я преподаватель</button><button className="secondary big full" onClick={() => login('school')}>Я представляю школу</button></div></section>
+  return <section className="login-wrap"><div className="login-card"><span className="eyebrow">Demo access</span><h2>Демо-режим ORTA</h2><p>Регистрацию пока пропускаем. Выбери роль, чтобы протестировать рабочие сценарии платформы.</p><button className="primary big full" onClick={() => login('teacher')}>Я преподаватель</button><button className="secondary big full" onClick={() => login('school')}>Я представляю школу</button></div></section>
 }
 
-function Dashboard({ role, opportunities, applications, createOpportunity }) {
-  if (role === 'guest') return <section className="page-section"><h2>Сначала войдите</h2></section>;
-  if (role === 'teacher') return <section className="page-section"><span className="eyebrow">Teacher dashboard</span><h2>Мои отклики</h2>{applications.length === 0 ? <p className="muted">Вы пока никуда не откликнулись.</p> : <div className="list">{applications.map(a => <article className="opportunity" key={a.id}><div><h3>{a.title}</h3><p>{a.school}</p></div><span className="status">Application sent</span></article>)}</div>}</section>;
-  return <section className="page-section"><span className="eyebrow">School dashboard</span><h2>Создать запрос</h2>
-    <form className="form-card" onSubmit={createOpportunity}>
-      <input name="title" required placeholder="Напр.: Robotics lesson for Grade 8" />
+function Dashboard({ role, opportunities, applications, createOpportunity, updateApplicationStatus, openOpportunity }) {
+  if (role === 'guest') return <section className="page-section"><h2>Выберите демо-роль</h2></section>;
+  if (role === 'teacher') return <section className="page-section"><span className="eyebrow">Teacher dashboard</span><h2>Мой кабинет</h2><div className="dashboard-stats"><div><b>{applications.length}</b><span>откликов</span></div><div><b>{applications.filter(a=>a.status==='Accepted').length}</b><span>принято</span></div><div><b>{applications.filter(a=>a.status==='Pending').length}</b><span>на рассмотрении</span></div></div><h2 className="spaced">Мои отклики</h2>{applications.length === 0 ? <p className="muted">Вы пока никуда не откликнулись.</p> : <div className="list">{applications.map(a => <article className="opportunity" key={a.id}><div><h3>{a.title}</h3><p>{a.school}</p><p className="muted">{a.message}</p></div><span className={'status status-'+a.status.toLowerCase()}>{a.status}</span></article>)}</div>}</section>;
+
+  const schoolApps = applications.filter(a => opportunities.some(o => o.id === a.opportunityId));
+  return <section className="page-section"><span className="eyebrow">School dashboard</span><h2>Кабинет школы</h2><div className="dashboard-stats"><div><b>{opportunities.length}</b><span>объявлений</span></div><div><b>{schoolApps.length}</b><span>откликов</span></div><div><b>{schoolApps.filter(a=>a.status==='Accepted').length}</b><span>принято</span></div></div>
+    <h2 className="spaced">Создать запрос</h2>
+    <form className="form-card wide" onSubmit={createOpportunity}>
+      <input name="title" required placeholder="Название запроса, напр. Robotics lesson for Grade 8" />
       <div className="form-row"><input name="school" placeholder="Название школы" /><input name="city" required placeholder="Город" /></div>
-      <div className="form-row"><select name="format"><option>Online</option><option>Offline</option><option>Hybrid</option></select><input name="pay" required type="number" placeholder="Оплата, ₸" /></div>
+      <div className="form-row"><input name="subject" required placeholder="Предмет" /><input name="grade" required placeholder="Класс" /></div>
+      <div className="form-row"><select name="format"><option>Online</option><option>Offline</option><option>Hybrid</option></select><select name="language"><option>Қазақша</option><option>Русский</option><option>English</option></select></div>
+      <div className="form-row"><input name="date" type="date" /><input name="duration" required placeholder="Длительность, напр. 60 мин" /></div>
+      <div className="form-row"><input name="students" required type="number" placeholder="Количество учеников" /><input name="pay" required type="number" placeholder="Оплата, ₸" /></div>
+      <textarea name="description" required rows="4" placeholder="Описание занятия" />
+      <textarea name="requirements" required rows="3" placeholder="Требования к преподавателю" />
       <button className="primary">Опубликовать запрос</button>
     </form>
-    <h2 className="spaced">Все запросы</h2><div className="list">{opportunities.map(o => <article className="opportunity" key={o.id}><div><h3>{o.title}</h3><p>{o.city} · {o.format}</p></div><b>{o.pay}</b></article>)}</div>
+    <h2 className="spaced">Отклики преподавателей</h2>{schoolApps.length===0?<p className="muted">Пока откликов нет.</p>:<div className="list">{schoolApps.map(a=><article className="application-card" key={a.id}><div><h3>{a.teacherName}</h3><p><b>{a.title}</b></p><p className="muted">{a.message}</p></div><div className="application-actions"><span className={'status status-'+a.status.toLowerCase()}>{a.status}</span>{a.status==='Pending'&&<><button className="primary" onClick={()=>updateApplicationStatus(a.id,'Accepted')}>Принять</button><button className="secondary" onClick={()=>updateApplicationStatus(a.id,'Rejected')}>Отклонить</button></>}</div></article>)}</div>}
+    <h2 className="spaced">Мои объявления</h2><div className="list">{opportunities.map(o => <article className="opportunity" key={o.id}><div><h3>{o.title}</h3><p>{o.city} · {o.format} · {o.subject}</p></div><div className="opp-side"><b>{o.pay.toLocaleString('ru-RU')} ₸</b><button className="secondary" onClick={()=>openOpportunity(o)}>Открыть</button></div></article>)}</div>
   </section>;
 }
 
