@@ -287,6 +287,7 @@ function App() {
 
       <main>
         {page === 'home' && <Home setPage={setPage} />}
+        {page === 'needs' && <NeedsMatcher setPage={setPage} openProgram={openProgram} />}
         {page === 'programs' && <Programs items={seedPrograms} openProgram={openProgram} />}
         {page === 'programDetail' && selectedProgram && <ProgramDetail program={selectedProgram} teachers={seedTeachers} openTeacher={openTeacher} setPage={setPage} />}
         {page === 'about' && <AboutRoadmap setPage={setPage} />}
@@ -314,7 +315,7 @@ function App() {
             <div className="dara-actions">
               <button onClick={() => assistantGo('programs')}>Найти урок / программу</button>
               <button onClick={() => assistantGo('opportunities')}>Найти возможности</button>
-              <button onClick={() => assistantGo('schoolProfile')}>Для школы</button>
+              <button onClick={() => assistantGo('needs')}>Что нужно школе?</button>
               <button onClick={() => assistantGo('opportunities')}>STEM / гранты</button>
             </div>
             <small className="dara-note">Демо-помощник · AI подключим позже</small>
@@ -348,7 +349,7 @@ function Home({ setPage }) {
         <p>ORTA — сеть образовательных ресурсов для школ. Мы соединяем школы с экспертами, готовыми программами, партнёрами, грантами и другими возможностями, которых может не быть внутри самой школы.</p>
         <div className="hero-actions">
           <button className="primary big" onClick={() => setPage('programs')}>Найти урок или программу</button>
-          <button className="secondary big" onClick={() => setPage('dashboard')}>Разместить потребность школы</button>
+          <button className="secondary big" onClick={() => setPage('needs')}>Что нужно вашей школе?</button>
         </div>
         <div className="school-only-note">Для государственных и частных школ · не сервис репетиторов</div>
       </div>
@@ -537,6 +538,65 @@ function Home({ setPage }) {
       </div>
     </section>
   </>
+}
+
+
+function NeedsMatcher({ setPage, openProgram }) {
+  const [need, setNeed] = useState('stem');
+
+  const needs = [
+    { id: 'stem', icon: '⚙️', title: 'Нужен STEM-урок', text: 'Робототехника, инженерия, физика, энергетика', programId: 'arduino-smart-city', action: 'Открыть STEM-программу' },
+    { id: 'expert', icon: '🧑‍🏭', title: 'Нужен эксперт из индустрии', text: 'Гостевой урок, профориентация, инженер или специалист', target: 'programs', action: 'Посмотреть программы с экспертами' },
+    { id: 'language', icon: '🌍', title: 'Хотим языковой обмен', text: 'Speaking club, совместный урок или международный формат', programId: 'english-speaking-club', action: 'Открыть языковую программу' },
+    { id: 'partner', icon: '🏫', title: 'Ищем школу-партнёра', text: 'Совместный урок, обмен опытом или межрегиональный проект', target: 'schoolProfile', action: 'Перейти к школам' },
+    { id: 'ai', icon: '🤖', title: 'Нужна программа по AI / Robotics', text: 'Практические занятия, цифровые навыки и проектная работа', programId: 'arduino-smart-city', action: 'Посмотреть подходящую программу' },
+    { id: 'funding', icon: '🎁', title: 'Нужно финансирование', text: 'Pilot Credits, гранты, программы компаний и фондов', target: 'opportunities', action: 'Посмотреть возможности' },
+    { id: 'materials', icon: '📦', title: 'Нужны материалы или оборудование', text: 'Наборы, лаборатории, методические ресурсы и партнёрская поддержка', target: 'partners', action: 'Найти партнёрские решения' }
+  ];
+
+  const current = needs.find(x => x.id === need) || needs[0];
+  const matchedProgram = current.programId ? seedPrograms.find(p => p.id === current.programId) : null;
+
+  const go = () => {
+    if (matchedProgram) openProgram(matchedProgram);
+    else setPage(current.target || 'programs');
+  };
+
+  return <section className="page-section needs-page">
+    <div className="needs-hero">
+      <span className="eyebrow">School needs navigator</span>
+      <h2>Что нужно вашей школе?</h2>
+      <p>Не ищите человека или отдельное объявление. Выберите потребность — ORTA покажет подходящий образовательный путь: программу, эксперта, школу-партнёра, финансирование или другую возможность.</p>
+    </div>
+
+    <div className="needs-layout">
+      <div className="needs-grid">
+        {needs.map(item => <button
+          key={item.id}
+          className={"need-card" + (need === item.id ? " active" : "")}
+          onClick={() => setNeed(item.id)}
+        >
+          <span className="need-icon">{item.icon}</span>
+          <b>{item.title}</b>
+          <small>{item.text}</small>
+        </button>)}
+      </div>
+
+      <aside className="needs-result">
+        <span className="result-kicker">ORTA нашла направление</span>
+        <h3>{current.title}</h3>
+        <p>{current.text}</p>
+        <div className="solution-stack">
+          {current.programId && <div><span>📚</span><p><b>Готовая программа</b><small>{matchedProgram?.title}</small></p></div>}
+          {['stem','expert','language','ai'].includes(current.id) && <div><span>👩‍🔬</span><p><b>Эксперт</b><small>Подбирается внутри программы, а не как отдельный репетитор</small></p></div>}
+          {['stem','language','partner','ai'].includes(current.id) && <div><span>🏫</span><p><b>Школьная сеть</b><small>Можно подключить школу-партнёра или совместный формат</small></p></div>}
+          {['funding','stem','ai','materials'].includes(current.id) && <div><span>🎁</span><p><b>Финансирование</b><small>Pilot Credits, гранты или поддержка партнёров</small></p></div>}
+        </div>
+        <button className="primary big full" onClick={go}>{current.action}</button>
+        <small className="needs-demo-note">Демо-механика MVP · позже ORTA сможет автоматически ранжировать решения по городу, классу, формату и доступному бюджету.</small>
+      </aside>
+    </div>
+  </section>
 }
 
 function Programs({ items, openProgram }) {
