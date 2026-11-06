@@ -223,7 +223,7 @@ function App() {
           <span><b>ORTA</b><small>Opportunity. Resource. Talent. Access.</small></span>
         </button>
         <nav>
-          <button onClick={() => setPage('teachers')}>Преподаватели</button>
+          <button onClick={() => setPage('teachers')}>Таланты</button>
           <button onClick={() => setPage('opportunities')}>Возможности</button>
           <button onClick={() => setPage('schoolProfile')}>Школы</button>
           {role !== 'guest' && <button onClick={() => setPage('dashboard')}>Dashboard</button>}
@@ -256,10 +256,10 @@ function App() {
             </div>
             <p className="dara-greeting">Сәлем! Что хотите найти?</p>
             <div className="dara-actions">
-              <button onClick={() => assistantGo('teachers')}>Найти преподавателя</button>
-              <button onClick={() => assistantGo('opportunities')}>Найти занятие</button>
+              <button onClick={() => assistantGo('teachers')}>Найти эксперта</button>
+              <button onClick={() => assistantGo('opportunities')}>Найти возможности</button>
               <button onClick={() => assistantGo('schoolProfile')}>Для школы</button>
-              <button onClick={() => assistantGo('opportunities')}>Робототехника / STEM</button>
+              <button onClick={() => assistantGo('opportunities')}>STEM / гранты</button>
             </div>
             <small className="dara-note">Демо-помощник · AI подключим позже</small>
           </div>
@@ -287,56 +287,73 @@ function Home({ setPage }) {
   return <>
     <section className="hero">
       <div className="hero-copy">
-        <span className="eyebrow">Education without borders</span>
-        <h1>Школы находят таланты.<br/>Преподаватели находят возможности.</h1>
-        <p>ORTA объединяет школы, учителей и образовательные проекты в одной платформе — от совместных уроков до гостевых лекций и готовых материалов.</p>
+        <span className="eyebrow">Opportunity · Resource · Talent · Access</span>
+        <h1>Возможности образования<br/>не должны зависеть от города.</h1>
+        <p>ORTA — сеть образовательных ресурсов для школ. Мы соединяем школы с экспертами, готовыми программами, партнёрами, грантами и другими возможностями, которых может не быть внутри самой школы.</p>
         <div className="hero-actions">
           <button className="primary big" onClick={() => setPage('opportunities')}>Найти возможности</button>
-          <button className="secondary big" onClick={() => setPage('teachers')}>Найти преподавателя</button>
+          <button className="secondary big" onClick={() => setPage('dashboard')}>Разместить потребность школы</button>
         </div>
+        <div className="school-only-note">Для государственных и частных школ · не сервис репетиторов</div>
       </div>
-      <div className="hero-panel">
-        <div className="stat"><b>3</b><span>типа участников</span></div>
-        <div className="stat"><b>1</b><span>единая сеть</span></div>
-        <div className="stat"><b>24/7</b><span>доступ к возможностям</span></div>
+      <div className="hero-panel hero-network-panel">
+        <div className="network-center">ORTA</div>
+        <div className="network-node n1"><span>🏫</span><b>Школа</b></div>
+        <div className="network-node n2"><span>👩‍🔬</span><b>Эксперт</b></div>
+        <div className="network-node n3"><span>📚</span><b>Ресурс</b></div>
+        <div className="network-node n4"><span>🏆</span><b>Возможность</b></div>
       </div>
     </section>
 
-    <section className="school-testimonials">
-      <div className="testimonial-heading">
-        <div>
-          <span className="eyebrow">School stories</span>
-          <h2>Что говорят школы</h2>
-        </div>
-        <span className="demo-note">Демо-отзывы</span>
+    <section className="orta-pillars">
+      <div className="pillar-heading">
+        <span className="eyebrow">What ORTA means</span>
+        <h2>Не просто люди. Вся образовательная экосистема.</h2>
       </div>
-      <div className="testimonial-grid">
+      <div className="pillar-grid">
         {[
-          {school:'School №125',city:'Almaty',result:'Преподаватель найден за 2 дня',text:'Быстро нашли специалиста по робототехнике для гостевого урока.',logo:'https://api.dicebear.com/9.x/shapes/svg?seed=School125&backgroundColor=e8f5f4'},
-          {school:'Regional STEM School',city:'Kyzylorda',result:'30 учеников на мастер-классе',text:'Удалось пригласить преподавателя по физике без долгого поиска.',logo:'https://api.dicebear.com/9.x/shapes/svg?seed=RegionalSTEM&backgroundColor=fff7df'},
-          {school:'NIS Partner School',city:'Astana',result:'Повторное приглашение',text:'После первого speaking club пригласили преподавателя ещё раз.',logo:'https://api.dicebear.com/9.x/shapes/svg?seed=NISPartner&backgroundColor=edf4f7'}
-        ].map(item => <article className="testimonial-card" key={item.school}>
-          <div className="testimonial-school">
-            <img src={item.logo} alt="" />
-            <div><b>{item.school}</b><span>{item.city}</span></div>
-          </div>
-          <div className="testimonial-stars">★★★★★</div>
-          <p>“{item.text}”</p>
-          <strong>{item.result}</strong>
-        </article>)}
+          ['O','Opportunity','Гранты, форумы, конкурсы, программы компаний','opportunities'],
+          ['R','Resource','Готовые уроки, материалы, оборудование и программы','opportunities'],
+          ['T','Talent','Преподаватели, инженеры, эксперты и студенты','teachers'],
+          ['A','Access','Доступ к этим ресурсам для любой школы и региона','opportunities']
+        ].map(([letter,title,desc,target]) => <button className="pillar-card" key={letter} onClick={() => setPage(target)}>
+          <span className="pillar-letter">{letter}</span>
+          <div><b>{title}</b><p>{desc}</p></div>
+          <span className="pillar-arrow">→</span>
+        </button>)}
+      </div>
+    </section>
+
+    <section className="school-needs">
+      <div className="section-kicker">
+        <span className="eyebrow">School first</span>
+        <h2>Что нужно вашей школе?</h2>
+      </div>
+      <div className="needs-grid">
+        {[
+          ['👨‍🏫','Пригласить эксперта','Гостевой урок, лекция или мастер-класс','teachers'],
+          ['🔬','Провести STEM-урок','Робототехника, физика, инженерия','opportunities'],
+          ['🏫','Найти школу-партнёра','Совместные уроки и обмен опытом','schoolProfile'],
+          ['🎓','Найти программу','Курсы и инициативы компаний','opportunities'],
+          ['🏆','Грант / конкурс / форум','Внешние образовательные возможности','opportunities'],
+          ['📚','Получить материалы','Готовые уроки и методические ресурсы','opportunities']
+        ].map(([icon,title,desc,target]) => <button className="need-card" key={title} onClick={() => setPage(target)}>
+          <span className="need-icon">{icon}</span>
+          <div><b>{title}</b><p>{desc}</p></div>
+        </button>)}
       </div>
     </section>
 
     <section className="how-it-works">
       <div className="section-kicker">
         <span className="eyebrow">Simple flow</span>
-        <h2>Как это работает</h2>
+        <h2>От потребности школы — к решению</h2>
       </div>
       <div className="how-grid">
         {[
-          ['01','Школа публикует запрос','Указывает предмет, формат, дату и условия.'],
-          ['02','Преподаватель откликается','Школа сразу видит профиль, опыт и отзывы.'],
-          ['03','Договариваются о занятии','После принятия отклика стороны переходят к занятию.']
+          ['01','Школа описывает потребность','Например: STEM-урок, эксперт, программа, материал или партнёр.'],
+          ['02','ORTA собирает варианты','Подходящие люди, ресурсы и возможности появляются в одном месте.'],
+          ['03','Школа выбирает решение','Связывается с партнёром и запускает нужную образовательную активность.']
         ].map(([n,t,d]) => <article className="how-card" key={n}>
           <span className="how-number">{n}</span>
           <h3>{t}</h3>
@@ -348,15 +365,15 @@ function Home({ setPage }) {
     <section className="trust-strip">
       <div className="trust-item">
         <span className="trust-icon">✓</span>
-        <div><b>Проверяем профили</b><small>Верификацию подключим по мере запуска</small></div>
+        <div><b>School-first</b><small>Платформа строится вокруг потребностей школ</small></div>
       </div>
       <div className="trust-item">
-        <span className="trust-icon">↔</span>
-        <div><b>Прозрачный выбор</b><small>Опыт, рейтинг, отзывы и условия до отклика</small></div>
+        <span className="trust-icon">◇</span>
+        <div><b>Разные типы ресурсов</b><small>Не только преподаватели, но и программы, материалы и партнёры</small></div>
       </div>
       <div className="trust-item">
         <span className="trust-icon">◎</span>
-        <div><b>Поддержка школ</b><small>Помогаем найти подходящего специалиста</small></div>
+        <div><b>Доступ для регионов</b><small>Возможности вне зависимости от местоположения школы</small></div>
       </div>
     </section>
 
@@ -391,19 +408,35 @@ function Home({ setPage }) {
       <p className="promo-hint">Листайте баннеры →</p>
     </section>
 
-    <section className="features compact-features">
-      {[
-        ['🏫','Для школ','Найти преподавателя'],
-        ['👩‍🏫','Для учителей','Найти занятие'],
-        ['🌍','Для регионов','Получить доступ']
-      ].map(([icon,t,d]) => <article key={t}><span className="feature-icon">{icon}</span><div><h3>{t}</h3><p>{d}</p></div></article>)}
+    <section className="school-testimonials">
+      <div className="testimonial-heading">
+        <div>
+          <span className="eyebrow">School stories</span>
+          <h2>Как школы могут использовать ORTA</h2>
+        </div>
+        <span className="demo-note">Демо-сценарии</span>
+      </div>
+      <div className="testimonial-grid">
+        {[
+          {school:'School №125',city:'Almaty',result:'Гостевой STEM-урок',text:'Школа находит инженера для практического занятия по робототехнике.',logo:'https://api.dicebear.com/9.x/shapes/svg?seed=School125&backgroundColor=e8f5f4'},
+          {school:'Regional STEM School',city:'Kyzylorda',result:'Доступ к программе',text:'Региональная школа подключается к программе компании, которой нет локально.',logo:'https://api.dicebear.com/9.x/shapes/svg?seed=RegionalSTEM&backgroundColor=fff7df'},
+          {school:'NIS Partner School',city:'Astana',result:'Совместный урок школ',text:'Две школы проводят общий онлайн-урок и обмениваются опытом.',logo:'https://api.dicebear.com/9.x/shapes/svg?seed=NISPartner&backgroundColor=edf4f7'}
+        ].map(item => <article className="testimonial-card" key={item.school}>
+          <div className="testimonial-school">
+            <img src={item.logo} alt="" />
+            <div><b>{item.school}</b><span>{item.city}</span></div>
+          </div>
+          <p>“{item.text}”</p>
+          <strong>{item.result}</strong>
+        </article>)}
+      </div>
     </section>
   </>
 }
 
 function Teachers({ search, setSearch, filters, setFilters, items, openTeacher }) {
   return <section className="page-section">
-    <div className="section-head"><div><span className="eyebrow">Talent network</span><h2>Преподаватели</h2></div><input placeholder="Поиск: Robotics, Physics, Almaty..." value={search} onChange={e => setSearch(e.target.value)} /></div>
+    <div className="section-head"><div><span className="eyebrow">Talent network</span><h2>Эксперты и таланты</h2></div><input placeholder="Поиск: Robotics, Physics, Almaty..." value={search} onChange={e => setSearch(e.target.value)} /></div>
     <div className="filters">
       <select value={filters.city} onChange={e => setFilters({...filters, city:e.target.value})}><option>Все</option><option>Almaty</option><option>Astana</option><option>Kyzylorda</option></select>
       <select value={filters.subject} onChange={e => setFilters({...filters, subject:e.target.value})}><option>Все</option><option>Robotics</option><option>English</option><option>Physics</option></select>
