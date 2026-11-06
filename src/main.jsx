@@ -41,9 +41,9 @@ const seedTeachers = [
 ];
 
 const seedOpportunities = [
-  { id: 1, title: 'Robotics lesson for Grade 8', school: 'School №125', subject: 'Robotics', grade: '8 класс', format: 'Online', pay: 15000, city: 'Almaty', language: 'Русский', date: '2026-11-20', duration: '60 мин', students: 24, description: 'Практический вводный урок по Arduino и базовой робототехнике.', requirements: 'Опыт работы со школьниками, демонстрационный проект.', status: 'Open' },
-  { id: 2, title: 'Guest English speaking club', school: 'NIS partner school', subject: 'English', grade: '9–10 класс', format: 'Online', pay: 20000, city: 'Astana', language: 'English', date: '2026-11-24', duration: '75 мин', students: 18, description: 'Гостевой speaking club с интерактивной дискуссией.', requirements: 'English C1+, опыт проведения speaking clubs.', status: 'Open' },
-  { id: 3, title: 'Physics masterclass', school: 'Regional school', subject: 'Physics', grade: '10 класс', format: 'Offline', pay: 25000, city: 'Kyzylorda', language: 'Қазақша', date: '2026-11-28', duration: '90 мин', students: 30, description: 'Мастер-класс по прикладной физике и энергетике.', requirements: 'Опыт преподавания физики или инженерное образование.', status: 'Open' },
+  { id: 1, pilot: true, title: 'Robotics lesson for Grade 8', school: 'School №125', subject: 'Robotics', grade: '8 класс', format: 'Online', pay: 15000, city: 'Almaty', language: 'Русский', date: '2026-11-20', duration: '60 мин', students: 24, description: 'Практический вводный урок по Arduino и базовой робототехнике.', requirements: 'Опыт работы со школьниками, демонстрационный проект.', status: 'Open' },
+  { id: 2, pilot: true, title: 'Guest English speaking club', school: 'NIS partner school', subject: 'English', grade: '9–10 класс', format: 'Online', pay: 20000, city: 'Astana', language: 'English', date: '2026-11-24', duration: '75 мин', students: 18, description: 'Гостевой speaking club с интерактивной дискуссией.', requirements: 'English C1+, опыт проведения speaking clubs.', status: 'Open' },
+  { id: 3, pilot: false, title: 'Physics masterclass', school: 'Regional school', subject: 'Physics', grade: '10 класс', format: 'Offline', pay: 25000, city: 'Kyzylorda', language: 'Қазақша', date: '2026-11-28', duration: '90 мин', students: 30, description: 'Мастер-класс по прикладной физике и энергетике.', requirements: 'Опыт преподавания физики или инженерное образование.', status: 'Open' },
 ];
 
 
@@ -89,7 +89,9 @@ const demoSchool = {
   students: 620,
   website: 'school.orta.kz',
   about: 'Школа, открытая для приглашённых преподавателей, совместных уроков и образовательных проектов.',
-  verified: true
+  verified: true,
+  pilotCredits: 1,
+  pilotLimit: 20000
 };
 
 const readLocal = (key, fallback) => {
@@ -186,7 +188,8 @@ function App() {
       students: Number(data.get('students')),
       description: data.get('description'),
       requirements: data.get('requirements'),
-      status: 'Open'
+      status: 'Open',
+      pilot: false
     };
     setOpportunities(prev => [newOpp, ...prev]);
     e.currentTarget.reset();
@@ -341,6 +344,23 @@ function Home({ setPage }) {
           <span className="need-icon">{icon}</span>
           <div><b>{title}</b><p>{desc}</p></div>
         </button>)}
+      </div>
+    </section>
+
+    <section className="pilot-section">
+      <div className="pilot-card-home">
+        <div className="pilot-badge-large">ORTA PILOT</div>
+        <div className="pilot-copy">
+          <span className="eyebrow">Try before scaling</span>
+          <h2>Первый образовательный опыт для школы — бесплатно</h2>
+          <p>Подтверждённая школа получает 1 Pilot Credit и может использовать его на подходящий урок, мастер-класс или приглашённого эксперта стоимостью до 20 000 ₸.</p>
+          <div className="pilot-steps">
+            <span>1 кредит школе</span>
+            <span>до 20 000 ₸</span>
+            <span>без подписки</span>
+          </div>
+        </div>
+        <button className="pilot-cta" onClick={() => setPage('opportunities')}>Выбрать Pilot-возможность →</button>
       </div>
     </section>
 
@@ -580,7 +600,7 @@ function Opportunities({ items, filters, setFilters, openOpportunity, apply }) {
           </div>
           <div className="map-results-list">
             {items.map(o => <button className="map-result-card" key={o.id} onClick={() => openOpportunity(o)}>
-              <span className="status">{o.status}</span>
+              <div className="opp-badges"><span className="status">{o.status}</span>{o.pilot && <span className="pilot-badge compact">Pilot</span>}</div>
               <b>{o.title}</b>
               <small>{o.school} · {o.city} · {o.format}</small>
               <strong>{o.pay.toLocaleString('ru-RU')} ₸</strong>
@@ -590,7 +610,7 @@ function Opportunities({ items, filters, setFilters, openOpportunity, apply }) {
       </div>
     ) : (
       <div className="list">{items.map(o => <article className="opportunity" key={o.id}>
-        <div><span className="status">{o.status}</span><h3>{o.title}</h3><p className="muted">{o.school} · {o.city} · {o.format}</p><p>{o.subject} · {o.grade} · {o.language}</p></div>
+        <div><div className="opp-badges"><span className="status">{o.status}</span>{o.pilot && <span className="pilot-badge">🎁 1-й урок бесплатно</span>}</div><h3>{o.title}</h3><p className="muted">{o.school} · {o.city} · {o.format}</p><p>{o.subject} · {o.grade} · {o.language}</p></div>
         <div className="opp-side"><b>{o.pay.toLocaleString('ru-RU')} ₸</b><button className="secondary" onClick={() => openOpportunity(o)}>Подробнее</button><button className="primary" onClick={() => apply(o)}>Откликнуться</button></div>
       </article>)}</div>
     )}
@@ -599,12 +619,17 @@ function Opportunities({ items, filters, setFilters, openOpportunity, apply }) {
 
 function OpportunityDetail({ opp, apply }) {
   const [message, setMessage] = useState('Здравствуйте! Мне интересен ваш запрос. Готов обсудить формат занятия.');
-  return <section className="page-section detail-page"><div><span className="status">{opp.status}</span><h2>{opp.title}</h2><p className="muted">{opp.school} · {opp.city}</p><div className="detail-grid"><div><b>Предмет</b><span>{opp.subject}</span></div><div><b>Класс</b><span>{opp.grade}</span></div><div><b>Формат</b><span>{opp.format}</span></div><div><b>Дата</b><span>{opp.date || 'По согласованию'}</span></div><div><b>Длительность</b><span>{opp.duration}</span></div><div><b>Учеников</b><span>{opp.students}</span></div><div><b>Язык</b><span>{opp.language}</span></div><div><b>Оплата</b><span>{opp.pay.toLocaleString('ru-RU')} ₸</span></div></div><h3>Описание</h3><p>{opp.description}</p><h3>Требования</h3><p>{opp.requirements}</p></div>
+  return <section className="page-section detail-page"><div><div className="opp-badges"><span className="status">{opp.status}</span>{opp.pilot && <span className="pilot-badge">🎁 ORTA Pilot · до 20 000 ₸</span>}</div><h2>{opp.title}</h2><p className="muted">{opp.school} · {opp.city}</p><div className="detail-grid"><div><b>Предмет</b><span>{opp.subject}</span></div><div><b>Класс</b><span>{opp.grade}</span></div><div><b>Формат</b><span>{opp.format}</span></div><div><b>Дата</b><span>{opp.date || 'По согласованию'}</span></div><div><b>Длительность</b><span>{opp.duration}</span></div><div><b>Учеников</b><span>{opp.students}</span></div><div><b>Язык</b><span>{opp.language}</span></div><div><b>Оплата</b><span>{opp.pay.toLocaleString('ru-RU')} ₸</span></div></div><h3>Описание</h3><p>{opp.description}</p><h3>Требования</h3><p>{opp.requirements}</p></div>
     <aside className="apply-card"><h3>Откликнуться</h3><textarea rows="6" value={message} onChange={e=>setMessage(e.target.value)} /><button className="primary full" onClick={() => apply(opp, message)}>Отправить отклик</button></aside></section>
 }
 
 function SchoolProfile({ school, opportunities, openOpportunity }) {
-  return <section className="page-section"><div className="school-head"><img className="school-avatar" src={school.image} alt={school.name} /><div><span className="eyebrow">School profile</span><h2>{school.name} {school.verified && <span className="verified">✓</span>}</h2><p>{school.city} · {school.students} учеников · {school.website}</p><p>{school.about}</p></div></div><h2 className="spaced">Открытые запросы</h2><div className="list">{opportunities.slice(0,4).map(o=><article className="opportunity" key={o.id}><div><h3>{o.title}</h3><p className="muted">{o.city} · {o.format}</p></div><button className="secondary" onClick={()=>openOpportunity(o)}>Подробнее</button></article>)}</div></section>
+  return <section className="page-section"><div className="school-head"><img className="school-avatar" src={school.image} alt={school.name} /><div><span className="eyebrow">School profile</span><h2>{school.name} {school.verified && <span className="verified">✓</span>}</h2><p>{school.city} · {school.students} учеников · {school.website}</p><p>{school.about}</p></div></div>
+  <div className="pilot-wallet">
+    <div><span className="pilot-wallet-icon">P</span><div><b>ORTA Pilot Credit</b><small>Пробный образовательный опыт для школы</small></div></div>
+    <div className="pilot-balance"><b>{school.pilotCredits}</b><span>доступный кредит</span><small>до {school.pilotLimit.toLocaleString('ru-RU')} ₸</small></div>
+  </div>
+  <h2 className="spaced">Открытые запросы</h2><div className="list">{opportunities.slice(0,4).map(o=><article className="opportunity" key={o.id}><div><h3>{o.title}</h3><p className="muted">{o.city} · {o.format}</p></div><button className="secondary" onClick={()=>openOpportunity(o)}>Подробнее</button></article>)}</div></section>
 }
 
 function Login({ login }) {
