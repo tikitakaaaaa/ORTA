@@ -3,9 +3,41 @@ import { createRoot } from 'react-dom/client';
 import './styles.css';
 
 const seedTeachers = [
-  { id: 1, name: 'Aigerim S.', subject: 'Robotics & STEM', city: 'Almaty', mode: 'Online / Offline', rating: 4.9, price: 15000, languages: ['Қазақша','Русский','English'], experience: '6 лет', bio: 'Провожу практические занятия по робототехнике, Arduino и STEM для 5–11 классов.', tags: ['Arduino', 'Robotics', 'STEM'] },
-  { id: 2, name: 'Dias K.', subject: 'English', city: 'Astana', mode: 'Online', rating: 4.8, price: 12000, languages: ['English','Русский'], experience: '5 лет', bio: 'IELTS, speaking clubs и академический английский для школьников.', tags: ['IELTS', 'Speaking', 'Academic'] },
-  { id: 3, name: 'Madina T.', subject: 'Physics', city: 'Kyzylorda', mode: 'Online', rating: 4.7, price: 10000, languages: ['Қазақша','Русский'], experience: '7 лет', bio: 'Физика, олимпиадная подготовка и мастер-классы для 7–11 классов.', tags: ['Physics', 'Olympiad', 'Grades 7–11'] },
+  {
+    id: 1, name: 'Aigerim S.', subject: 'Robotics & STEM', city: 'Almaty', mode: 'Online / Offline',
+    rating: 4.9, reviews: 48, lessons: 126, repeatInvites: 31, price: 15000,
+    languages: ['Қазақша','Русский','English'], experience: '6 лет', grades: '5–11 классы',
+    education: [
+      { place: 'Satbayev University', degree: 'Electrical Engineering', period: '2016–2020' },
+      { place: 'STEM Education Academy', degree: 'Robotics Education Certificate', period: '2022' }
+    ],
+    certificates: ['Arduino Education', 'STEM Project-Based Learning', 'Child Safeguarding Basics'],
+    projects: ['Robotics Lab — школьная программа на 12 занятий', 'Arduino Smart City — командный проект для 8–9 классов'],
+    bio: 'Провожу практические занятия по робототехнике, Arduino и STEM для 5–11 классов. Делаю упор на реальные мини-проекты, работу в командах и понятное объяснение инженерных принципов.',
+    tags: ['Arduino', 'Robotics', 'STEM'],
+    reviewsList: [
+      { school: 'School №125', text: 'Сильная практика и очень понятная подача. Ученики были вовлечены весь урок.', rating: 5 },
+      { school: 'ORTA Demo School', text: 'Приглашали повторно на STEM-неделю. Хорошо адаптирует материал под возраст класса.', rating: 5 }
+    ]
+  },
+  {
+    id: 2, name: 'Dias K.', subject: 'English', city: 'Astana', mode: 'Online',
+    rating: 4.8, reviews: 36, lessons: 94, repeatInvites: 22, price: 12000,
+    languages: ['English','Русский'], experience: '5 лет', grades: '7–11 классы',
+    education: [{ place: 'ENU', degree: 'Foreign Languages', period: '2017–2021' }],
+    certificates: ['IELTS 8.0', 'CELTA'], projects: ['Speaking Club for Teens', 'Academic English Bootcamp'],
+    bio: 'IELTS, speaking clubs и академический английский для школьников.', tags: ['IELTS', 'Speaking', 'Academic'],
+    reviewsList: [{ school: 'NIS partner school', text: 'Динамичный speaking club и хороший контакт с учениками.', rating: 5 }]
+  },
+  {
+    id: 3, name: 'Madina T.', subject: 'Physics', city: 'Kyzylorda', mode: 'Online',
+    rating: 4.7, reviews: 29, lessons: 82, repeatInvites: 18, price: 10000,
+    languages: ['Қазақша','Русский'], experience: '7 лет', grades: '7–11 классы',
+    education: [{ place: 'Korkyt Ata University', degree: 'Physics', period: '2014–2018' }],
+    certificates: ['Olympiad Training Methods'], projects: ['Applied Physics Masterclass', 'Energy for Schools'],
+    bio: 'Физика, олимпиадная подготовка и мастер-классы для 7–11 классов.', tags: ['Physics', 'Olympiad', 'Grades 7–11'],
+    reviewsList: [{ school: 'Regional school', text: 'Сложные темы объясняет через практические примеры.', rating: 5 }]
+  },
 ];
 
 const seedOpportunities = [
@@ -259,15 +291,80 @@ function Teachers({ search, setSearch, filters, setFilters, items, openTeacher }
       <select value={filters.mode} onChange={e => setFilters({...filters, mode:e.target.value})}><option>Все</option><option>Online</option><option>Offline</option></select>
     </div>
     <div className="grid">{items.map(t => <article className="card" key={t.id}>
-      <div className="avatar">{t.name[0]}</div><h3>{t.name}</h3><p className="muted">{t.subject}</p><p>{t.city} · {t.mode}</p><p>★ {t.rating} · от {t.price.toLocaleString('ru-RU')} ₸</p><div className="tags">{t.tags.map(tag => <span key={tag}>{tag}</span>)}</div><button className="secondary" onClick={() => openTeacher(t)}>Открыть профиль</button>
+      <div className="avatar">{t.name[0]}</div><h3>{t.name}</h3><p className="muted">{t.subject}</p><p>{t.city} · {t.mode}</p><p>★ {t.rating} · {t.lessons} уроков · от {t.price.toLocaleString('ru-RU')} ₸</p><div className="tags">{t.tags.map(tag => <span key={tag}>{tag}</span>)}</div><button className="secondary" onClick={() => openTeacher(t)}>Открыть профиль</button>
     </article>)}</div>
   </section>
 }
 
 function TeacherProfile({ teacher, setPage }) {
   return <section className="page-section profile-layout">
-    <aside className="profile-card"><div className="avatar large">{teacher.name[0]}</div><h2>{teacher.name}</h2><p className="muted">{teacher.subject}</p><p>★ {teacher.rating}</p><p>{teacher.city}</p><p>{teacher.mode}</p><b>от {teacher.price.toLocaleString('ru-RU')} ₸ / занятие</b></aside>
-    <div className="profile-main"><span className="eyebrow">Teacher profile</span><h2>О преподавателе</h2><p>{teacher.bio}</p><h3>Опыт</h3><p>{teacher.experience}</p><h3>Языки</h3><div className="tags">{teacher.languages.map(x => <span key={x}>{x}</span>)}</div><h3>Навыки</h3><div className="tags">{teacher.tags.map(x => <span key={x}>{x}</span>)}</div><button className="primary" onClick={() => setPage('opportunities')}>Посмотреть возможности</button></div>
+    <aside className="profile-card teacher-sidebar">
+      <div className="profile-identity">
+        <div className="avatar large">{teacher.name[0]}</div>
+        <div><h2>{teacher.name}</h2><p className="muted">{teacher.subject}</p></div>
+      </div>
+      <div className="teacher-rating">★ {teacher.rating} <span>({teacher.reviews} отзывов)</span></div>
+      <div className="teacher-quick-stats">
+        <div><b>{teacher.lessons}</b><span>уроков</span></div>
+        <div><b>{teacher.repeatInvites}</b><span>повторных приглашений</span></div>
+      </div>
+      <div className="profile-facts">
+        <p><b>Город</b><span>{teacher.city}</span></p>
+        <p><b>Формат</b><span>{teacher.mode}</span></p>
+        <p><b>Классы</b><span>{teacher.grades}</span></p>
+        <p><b>Опыт</b><span>{teacher.experience}</span></p>
+      </div>
+      <div className="profile-price">от {teacher.price.toLocaleString('ru-RU')} ₸ <span>/ занятие</span></div>
+      <button className="primary full" onClick={() => setPage('opportunities')}>Пригласить / найти занятие</button>
+    </aside>
+
+    <div className="profile-main teacher-profile-main">
+      <span className="eyebrow">Teacher profile</span>
+      <h2>О преподавателе</h2>
+      <p className="profile-bio">{teacher.bio}</p>
+
+      <div className="profile-section">
+        <h3>Предметы и навыки</h3>
+        <div className="tags">{teacher.tags.map(x => <span key={x}>{x}</span>)}</div>
+      </div>
+
+      <div className="profile-section">
+        <h3>Языки</h3>
+        <div className="tags">{teacher.languages.map(x => <span key={x}>{x}</span>)}</div>
+      </div>
+
+      <div className="profile-section">
+        <h3>Образование</h3>
+        <div className="timeline-list">
+          {teacher.education.map((item, index) => <div className="timeline-item" key={index}>
+            <span className="timeline-dot"></span>
+            <div><b>{item.place}</b><p>{item.degree}</p><small>{item.period}</small></div>
+          </div>)}
+        </div>
+      </div>
+
+      <div className="profile-two-col">
+        <div className="profile-section mini-panel">
+          <h3>Сертификаты</h3>
+          <ul className="clean-list">{teacher.certificates.map(x => <li key={x}>✓ {x}</li>)}</ul>
+        </div>
+        <div className="profile-section mini-panel">
+          <h3>Проекты</h3>
+          <ul className="clean-list">{teacher.projects.map(x => <li key={x}>{x}</li>)}</ul>
+        </div>
+      </div>
+
+      <div className="profile-section">
+        <div className="reviews-heading"><h3>Отзывы школ</h3><span>★ {teacher.rating} · {teacher.reviews} отзывов</span></div>
+        <div className="review-grid">
+          {teacher.reviewsList.map((review, index) => <article className="review-card" key={index}>
+            <div className="review-stars">{'★'.repeat(review.rating)}</div>
+            <p>“{review.text}”</p>
+            <b>{review.school}</b>
+          </article>)}
+        </div>
+      </div>
+    </div>
   </section>
 }
 
