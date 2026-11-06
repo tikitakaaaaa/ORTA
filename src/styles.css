@@ -188,42 +188,40 @@ textarea{resize:vertical}
 
 footer{padding:30px 7vw;color:#778995;border-top:1px solid var(--border);background:#fff}
 
-.promo-section{padding:62px 7vw 16px;background:#fff}
-.promo-heading{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:25px}
-.promo-heading h2{font-size:40px;margin:0 0 10px;color:var(--navy);letter-spacing:-.025em}
-.promo-heading p{margin:0;max-width:720px;color:#687b89;font-size:16px;line-height:1.65}
-.promo-grid{display:grid;grid-template-columns:1.12fr 1fr 1fr;gap:18px}
-.promo-card{
-  min-height:310px;border-radius:26px;padding:25px;display:flex;flex-direction:column;
-  border:1px solid var(--border);overflow:hidden;position:relative;isolation:isolate
+.promo-section{padding:56px 7vw 20px;background:#fff}
+.promo-heading{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:22px}
+.promo-heading h2{font-size:40px;margin:0 0 8px;color:var(--navy);letter-spacing:-.025em}
+.promo-heading p{margin:0;max-width:620px;color:#687b89;font-size:15px;line-height:1.5}
+.promo-carousel{
+  display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;
+  padding:2px 2px 12px;scrollbar-width:thin;scrollbar-color:#c8d8df transparent
 }
-.promo-card:after{
-  content:"";position:absolute;width:190px;height:190px;border-radius:50%;
-  right:-58px;top:-62px;z-index:-1
+.promo-banner{
+  flex:0 0 min(820px,86vw);min-height:330px;border-radius:28px;
+  background-size:cover;background-position:center;scroll-snap-align:start;
+  position:relative;overflow:hidden;box-shadow:0 18px 40px rgba(18,50,74,.13)
 }
-.promo-1{background:linear-gradient(145deg,#eef8f7,#dff1ef)}
-.promo-1:after{background:rgba(22,125,127,.10)}
-.promo-2{background:linear-gradient(145deg,#f2f7fb,#e5eef4)}
-.promo-2:after{background:rgba(18,50,74,.08)}
-.promo-3{background:linear-gradient(145deg,#fffaf0,#fff1c9)}
-.promo-3:after{background:rgba(244,201,93,.22)}
-.promo-topline{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.promo-banner-content{
+  min-height:330px;padding:30px;display:flex;flex-direction:column;justify-content:flex-end;
+  color:#fff;max-width:650px
+}
+.promo-topline{display:flex;gap:10px;align-items:center;margin-bottom:auto}
 .promo-type,.promo-demo{font-size:12px;font-weight:900;border-radius:999px;padding:7px 10px}
-.promo-type{background:var(--navy);color:#fff}
-.promo-demo{background:rgba(255,255,255,.76);border:1px solid rgba(205,220,227,.9);color:#617481}
-.promo-card h3{font-size:27px;line-height:1.12;margin:28px 0 8px;max-width:90%;color:var(--navy)}
-.promo-partner{font-size:13px;font-weight:900;color:var(--teal);margin:0 0 18px;text-transform:uppercase;letter-spacing:.07em}
-.promo-description{color:#5d707d;line-height:1.6;flex:1}
-.promo-bottom{
-  display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:22px;
-  padding-top:18px;border-top:1px solid rgba(18,50,74,.10);font-size:13px;color:#657783
-}
-.promo-link{border:0;background:none;padding:0;color:var(--navy);font-weight:900;cursor:pointer;text-align:right}
-.partner-note{
-  margin-top:18px;padding:18px 20px;border-radius:17px;
-  background:linear-gradient(135deg,var(--navy),#164e63);color:#eaf4f5;line-height:1.5
-}
-.partner-note b{color:var(--yellow)}
+.promo-type{background:var(--yellow);color:#563d00}
+.promo-demo{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);color:#fff;backdrop-filter:blur(8px)}
+.promo-banner h3{font-size:clamp(29px,4vw,48px);line-height:1.04;margin:8px 0 18px;color:#fff;max-width:620px}
+.promo-partner{font-size:12px;font-weight:900;color:#d9f1ef;margin:0;text-transform:uppercase;letter-spacing:.09em}
+.promo-bottom{display:flex;align-items:center;gap:18px;flex-wrap:wrap;color:#fff;font-weight:700}
+.promo-button{border:0;border-radius:12px;padding:10px 14px;background:#fff;color:var(--navy);font-weight:900;cursor:pointer}
+.promo-hint{font-size:12px;color:#84939d;margin:3px 0 0}
+.compact-features{padding-top:30px}
+.compact-features article{display:flex;align-items:center;gap:15px;padding:20px}
+.compact-features h3{margin:0 0 3px}
+.compact-features p{margin:0;font-size:14px}
+.feature-icon{font-size:28px;line-height:1}
+.avatar-photo{object-fit:cover;background:#eef5f6;border:1px solid #d9e4e9}
+.school-head{display:flex;gap:22px;align-items:center}
+.school-avatar{width:110px;height:110px;border-radius:24px;object-fit:cover;background:#eef5f6;border:1px solid var(--border);flex:0 0 auto}
 
 @media(max-width:900px){
   .topbar nav{display:none}
@@ -242,8 +240,9 @@ footer{padding:30px 7vw;color:#778995;border-top:1px solid var(--border);backgro
   .detail-grid{grid-template-columns:1fr 1fr}
   .dashboard-stats{grid-template-columns:1fr}
   .promo-heading{align-items:flex-start;flex-direction:column}
-  .promo-grid{grid-template-columns:1fr}
-  .promo-card{min-height:auto}
+  .promo-banner{flex-basis:88vw;min-height:300px}
+  .promo-banner-content{min-height:300px}
+  .school-head{align-items:flex-start}
 }
 @media(max-width:640px){
   .topbar{padding:12px 18px}
@@ -253,6 +252,10 @@ footer{padding:30px 7vw;color:#778995;border-top:1px solid var(--border);backgro
   .hero-panel{grid-template-columns:1fr}
   .page-section,.features,.promo-section{padding-left:22px;padding-right:22px}
   .detail-grid{grid-template-columns:1fr}
+  .promo-banner{flex-basis:92vw;min-height:280px}
+  .promo-banner-content{min-height:280px;padding:22px}
+  .school-head{flex-direction:column}
+  .school-avatar{width:88px;height:88px}
 }
 
 .teacher-sidebar{display:grid;gap:18px}
