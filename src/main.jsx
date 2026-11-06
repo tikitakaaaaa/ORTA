@@ -495,9 +495,7 @@ function Opportunities({ items, filters, setFilters, openOpportunity, apply }) {
     { name: 'Kyzylorda', x: 45, y: 69 }
   ];
 
-  const selectCity = (city) => {
-    setFilters({ ...filters, city });
-  };
+  const selectCity = (city) => setFilters({ ...filters, city });
 
   return <section className="page-section">
     <div className="section-head">
@@ -536,7 +534,7 @@ function Opportunities({ items, filters, setFilters, openOpportunity, apply }) {
                 title={city.name}
               >
                 <span className="map-pin-dot"></span>
-                <span className="map-pin-label"><b>{city.name}</b><small>{count} {count === 1 ? 'возможность' : 'возможности'}</small></span>
+                <span className="map-pin-label"><b>{city.name}</b><small>{count} предлож.</small></span>
               </button>
             })}
           </div>
