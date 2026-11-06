@@ -14,6 +14,41 @@ const seedOpportunities = [
   { id: 3, title: 'Physics masterclass', school: 'Regional school', subject: 'Physics', grade: '10 класс', format: 'Offline', pay: 25000, city: 'Kyzylorda', language: 'Қазақша', date: '2026-11-28', duration: '90 мин', students: 30, description: 'Мастер-класс по прикладной физике и энергетике.', requirements: 'Опыт преподавания физики или инженерное образование.', status: 'Open' },
 ];
 
+
+
+const seedPromos = [
+  {
+    id: 1,
+    type: 'Форум',
+    badge: 'Демо',
+    title: 'Future Education Forum 2026',
+    partner: 'ORTA Partner',
+    date: '18 ноября 2026',
+    description: 'Панельные сессии, EdTech-проекты, школы и компании на одной площадке.',
+    cta: 'Подробнее'
+  },
+  {
+    id: 2,
+    type: 'Бесплатные уроки',
+    badge: 'Демо',
+    title: '200 онлайн-уроков по электронике',
+    partner: 'Technology Partner',
+    date: 'Доступно онлайн',
+    description: 'Базовая электроника, схемотехника, микроконтроллеры и практические задания для школьников.',
+    cta: 'Смотреть программу'
+  },
+  {
+    id: 3,
+    type: 'Грант / конкурс',
+    badge: 'Демо',
+    title: 'Школьный STEM Challenge',
+    partner: 'Education Foundation',
+    date: 'Приём заявок до 30 ноября',
+    description: 'Команды школ подают STEM-проекты и получают поддержку на реализацию лучших идей.',
+    cta: 'Условия участия'
+  }
+];
+
 const demoSchool = {
   id: 'school-demo',
   name: 'ORTA Demo School',
@@ -175,6 +210,40 @@ function Home({ setPage }) {
         <div className="stat"><b>24/7</b><span>доступ к возможностям</span></div>
       </div>
     </section>
+
+    <section className="promo-section">
+      <div className="promo-heading">
+        <div>
+          <span className="eyebrow">Featured opportunities</span>
+          <h2>Возможности недели</h2>
+          <p>Форумы, бесплатные программы, конкурсы и образовательные инициативы от партнёров ORTA.</p>
+        </div>
+        <button className="secondary" onClick={() => setPage('opportunities')}>Все возможности</button>
+      </div>
+
+      <div className="promo-grid">
+        {seedPromos.map((promo, index) => (
+          <article className={"promo-card promo-" + (index + 1)} key={promo.id}>
+            <div className="promo-topline">
+              <span className="promo-type">{promo.type}</span>
+              <span className="promo-demo">{promo.badge}</span>
+            </div>
+            <h3>{promo.title}</h3>
+            <p className="promo-partner">{promo.partner}</p>
+            <p className="promo-description">{promo.description}</p>
+            <div className="promo-bottom">
+              <span>{promo.date}</span>
+              <button className="promo-link" onClick={() => setPage('opportunities')}>{promo.cta} →</button>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <div className="partner-note">
+        <b>Для компаний и фондов:</b> здесь можно размещать образовательные программы, форумы, гранты и бесплатные курсы для школ и преподавателей.
+      </div>
+    </section>
+
     <section className="features">
       {[['Для школ','Публикуйте запросы, приглашайте учителей, находите готовые занятия.'],['Для учителей','Создавайте профиль, находите школы и оплачиваемые занятия.'],['Для регионов','Доступ к экспертам вне зависимости от города и размера школы.']].map(([t,d]) => <article key={t}><h3>{t}</h3><p>{d}</p></article>)}
     </section>
