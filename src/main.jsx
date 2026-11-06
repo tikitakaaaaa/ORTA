@@ -195,7 +195,13 @@ function App() {
     <div className="app-shell">
       <header className="topbar">
         <button className="brand" onClick={() => setPage('home')}>
-          <span className="brand-mark">O</span>
+          <span className="brand-mark" aria-hidden="true">
+            <svg className="shanyrak-logo" viewBox="0 0 64 64">
+              <circle cx="32" cy="32" r="20" fill="none" stroke="currentColor" strokeWidth="4.5"/>
+              <circle cx="32" cy="32" r="7.5" fill="none" stroke="currentColor" strokeWidth="4"/>
+              <path d="M32 12v12M32 40v12M12 32h12M40 32h12M18 18l8.5 8.5M37.5 37.5L46 46M46 18l-8.5 8.5M26.5 37.5L18 46" fill="none" stroke="currentColor" strokeWidth="3.6" strokeLinecap="round"/>
+            </svg>
+          </span>
           <span><b>ORTA</b><small>Opportunity. Resource. Talent. Access.</small></span>
         </button>
         <nav>
