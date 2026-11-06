@@ -488,17 +488,81 @@ function TeacherProfile({ teacher, setPage }) {
 }
 
 function Opportunities({ items, filters, setFilters, openOpportunity, apply }) {
+  const [viewMode, setViewMode] = useState('list');
+  const cityData = [
+    { name: 'Astana', x: 54, y: 29 },
+    { name: 'Almaty', x: 76, y: 72 },
+    { name: 'Kyzylorda', x: 45, y: 69 }
+  ];
+
+  const selectCity = (city) => {
+    setFilters({ ...filters, city });
+  };
+
   return <section className="page-section">
-    <div className="section-head"><div><span className="eyebrow">Open requests</span><h2>Возможности</h2></div></div>
+    <div className="section-head">
+      <div><span className="eyebrow">Open requests</span><h2>Возможности</h2></div>
+      <div className="view-toggle" role="group" aria-label="Режим просмотра">
+        <button className={viewMode === 'list' ? 'active' : ''} onClick={() => setViewMode('list')}>☰ Список</button>
+        <button className={viewMode === 'map' ? 'active' : ''} onClick={() => setViewMode('map')}>⌖ Карта</button>
+      </div>
+    </div>
+
     <div className="filters">
       <select value={filters.city} onChange={e => setFilters({...filters, city:e.target.value})}><option>Все</option><option>Almaty</option><option>Astana</option><option>Kyzylorda</option></select>
       <select value={filters.subject} onChange={e => setFilters({...filters, subject:e.target.value})}><option>Все</option><option>Robotics</option><option>English</option><option>Physics</option></select>
       <select value={filters.format} onChange={e => setFilters({...filters, format:e.target.value})}><option>Все</option><option>Online</option><option>Offline</option><option>Hybrid</option></select>
     </div>
-    <div className="list">{items.map(o => <article className="opportunity" key={o.id}>
-      <div><span className="status">{o.status}</span><h3>{o.title}</h3><p className="muted">{o.school} · {o.city} · {o.format}</p><p>{o.subject} · {o.grade} · {o.language}</p></div>
-      <div className="opp-side"><b>{o.pay.toLocaleString('ru-RU')} ₸</b><button className="secondary" onClick={() => openOpportunity(o)}>Подробнее</button><button className="primary" onClick={() => apply(o)}>Откликнуться</button></div>
-    </article>)}</div>
+
+    {viewMode === 'map' ? (
+      <div className="opportunity-map-layout">
+        <div className="kz-map-card">
+          <div className="map-caption">
+            <div><b>Карта возможностей ORTA</b><span>Нажмите на город, чтобы отфильтровать предложения</span></div>
+            {filters.city !== 'Все' && <button onClick={() => selectCity('Все')}>Показать все</button>}
+          </div>
+          <div className="kz-map" aria-label="Интерактивная карта возможностей Казахстана">
+            <svg className="kz-shape" viewBox="0 0 800 470" aria-hidden="true">
+              <path d="M87 188 L143 122 L246 94 L337 108 L405 77 L515 93 L570 139 L674 153 L710 216 L674 270 L601 292 L548 357 L455 371 L381 344 L305 365 L222 329 L153 310 L116 256 Z" />
+            </svg>
+            {cityData.map(city => {
+              const count = items.filter(o => o.city === city.name).length;
+              const selected = filters.city === city.name;
+              return <button
+                key={city.name}
+                className={"map-pin" + (selected ? " selected" : "")}
+                style={{left: city.x + '%', top: city.y + '%'}}
+                onClick={() => selectCity(city.name)}
+                title={city.name}
+              >
+                <span className="map-pin-dot"></span>
+                <span className="map-pin-label"><b>{city.name}</b><small>{count} {count === 1 ? 'возможность' : 'возможности'}</small></span>
+              </button>
+            })}
+          </div>
+        </div>
+
+        <div className="map-results">
+          <div className="map-results-head">
+            <b>{filters.city === 'Все' ? 'Все города' : filters.city}</b>
+            <span>{items.length} предложений</span>
+          </div>
+          <div className="map-results-list">
+            {items.map(o => <button className="map-result-card" key={o.id} onClick={() => openOpportunity(o)}>
+              <span className="status">{o.status}</span>
+              <b>{o.title}</b>
+              <small>{o.school} · {o.city} · {o.format}</small>
+              <strong>{o.pay.toLocaleString('ru-RU')} ₸</strong>
+            </button>)}
+          </div>
+        </div>
+      </div>
+    ) : (
+      <div className="list">{items.map(o => <article className="opportunity" key={o.id}>
+        <div><span className="status">{o.status}</span><h3>{o.title}</h3><p className="muted">{o.school} · {o.city} · {o.format}</p><p>{o.subject} · {o.grade} · {o.language}</p></div>
+        <div className="opp-side"><b>{o.pay.toLocaleString('ru-RU')} ₸</b><button className="secondary" onClick={() => openOpportunity(o)}>Подробнее</button><button className="primary" onClick={() => apply(o)}>Откликнуться</button></div>
+      </article>)}</div>
+    )}
   </section>
 }
 
