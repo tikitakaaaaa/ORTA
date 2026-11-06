@@ -261,6 +261,31 @@ function Home({ setPage }) {
       </div>
     </section>
 
+    <section className="school-testimonials">
+      <div className="testimonial-heading">
+        <div>
+          <span className="eyebrow">School stories</span>
+          <h2>Что говорят школы</h2>
+        </div>
+        <span className="demo-note">Демо-отзывы</span>
+      </div>
+      <div className="testimonial-grid">
+        {[
+          {school:'School №125',city:'Almaty',result:'Преподаватель найден за 2 дня',text:'Быстро нашли специалиста по робототехнике для гостевого урока.',logo:'https://api.dicebear.com/9.x/shapes/svg?seed=School125&backgroundColor=e8f5f4'},
+          {school:'Regional STEM School',city:'Kyzylorda',result:'30 учеников на мастер-классе',text:'Удалось пригласить преподавателя по физике без долгого поиска.',logo:'https://api.dicebear.com/9.x/shapes/svg?seed=RegionalSTEM&backgroundColor=fff7df'},
+          {school:'NIS Partner School',city:'Astana',result:'Повторное приглашение',text:'После первого speaking club пригласили преподавателя ещё раз.',logo:'https://api.dicebear.com/9.x/shapes/svg?seed=NISPartner&backgroundColor=edf4f7'}
+        ].map(item => <article className="testimonial-card" key={item.school}>
+          <div className="testimonial-school">
+            <img src={item.logo} alt="" />
+            <div><b>{item.school}</b><span>{item.city}</span></div>
+          </div>
+          <div className="testimonial-stars">★★★★★</div>
+          <p>“{item.text}”</p>
+          <strong>{item.result}</strong>
+        </article>)}
+      </div>
+    </section>
+
     <section className="promo-section">
       <div className="promo-heading">
         <div>
