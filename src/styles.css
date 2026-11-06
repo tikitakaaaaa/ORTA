@@ -166,6 +166,39 @@ button:hover{transform:translateY(-1px)}
 .map-result-card small{color:#798995}
 .map-result-card strong{color:var(--teal)}
 
+
+.view-toggle{display:flex;gap:4px;background:#edf3f6;padding:4px;border-radius:13px}
+.view-toggle button{border:0;background:transparent;color:#657783;padding:9px 12px;border-radius:10px;font-weight:800;cursor:pointer}
+.view-toggle button.active{background:#fff;color:var(--navy);box-shadow:0 4px 12px rgba(18,50,74,.08)}
+.opportunity-map-layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(280px,.45fr);gap:18px;align-items:stretch}
+.kz-map-card,.map-results{background:#fff;border:1px solid var(--border);border-radius:22px;box-shadow:0 10px 28px rgba(18,50,74,.045)}
+.kz-map-card{padding:18px}
+.map-caption{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:12px}
+.map-caption>div{display:grid;gap:3px}
+.map-caption b{color:var(--navy)}
+.map-caption span{font-size:12px;color:#7d8d98}
+.map-caption button{border:0;background:var(--teal-soft);color:var(--teal);font-weight:800;border-radius:10px;padding:8px 10px;cursor:pointer}
+.kz-map{position:relative;aspect-ratio:1.7/1;min-height:360px;border-radius:18px;overflow:hidden;background:linear-gradient(180deg,#edf6f7,#f7fbfc)}
+.kz-shape{position:absolute;inset:6% 4% 3%;width:92%;height:90%}
+.kz-shape path{fill:#dfecef;stroke:#bdd5dc;stroke-width:5;stroke-linejoin:round}
+.map-pin{position:absolute;transform:translate(-50%,-50%);border:0;background:transparent;display:flex;align-items:center;gap:8px;cursor:pointer;text-align:left}
+.map-pin-dot{width:16px;height:16px;border:4px solid #fff;border-radius:50%;background:var(--teal);box-shadow:0 3px 10px rgba(18,50,74,.28)}
+.map-pin-label{display:grid;gap:1px;background:#fff;border:1px solid var(--border);border-radius:11px;padding:7px 9px;box-shadow:0 8px 18px rgba(18,50,74,.1);white-space:nowrap}
+.map-pin-label b{font-size:12px;color:var(--navy)}
+.map-pin-label small{font-size:10px;color:#7e8e99}
+.map-pin.selected .map-pin-dot{background:var(--yellow);box-shadow:0 0 0 5px rgba(244,201,93,.22),0 3px 10px rgba(18,50,74,.2)}
+.map-pin.selected .map-pin-label{border-color:#e8c55d}
+.map-results{padding:16px;min-height:100%}
+.map-results-head{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:4px 2px 13px;border-bottom:1px solid var(--border)}
+.map-results-head b{color:var(--navy)}
+.map-results-head span{font-size:12px;color:#83919a}
+.map-results-list{display:grid;gap:10px;margin-top:12px}
+.map-result-card{border:1px solid var(--border);background:#f9fbfc;border-radius:15px;padding:13px;text-align:left;display:grid;gap:7px;cursor:pointer}
+.map-result-card:hover{background:#f0f7f7;border-color:#c4dddd;transform:translateY(-1px)}
+.map-result-card b{color:var(--navy);line-height:1.25}
+.map-result-card small{color:#798995}
+.map-result-card strong{color:var(--teal)}
+
 .list{display:grid;gap:12px}
 .opportunity,.application-card{
   display:flex;justify-content:space-between;gap:20px;align-items:center;
@@ -340,6 +373,8 @@ footer{padding:30px 7vw;color:#778995;border-top:1px solid var(--border);backgro
   .opportunity,.application-card{align-items:flex-start;flex-direction:column}
   .opportunity-map-layout{grid-template-columns:1fr}
   .kz-map{min-height:300px}
+  .opportunity-map-layout{grid-template-columns:1fr}
+  .kz-map{min-height:300px}
   .opp-side,.application-actions{text-align:left;justify-items:start}
   .form-row{grid-template-columns:1fr}
   .profile-layout,.detail-page{grid-template-columns:1fr}
@@ -369,6 +404,11 @@ footer{padding:30px 7vw;color:#778995;border-top:1px solid var(--border);backgro
   .page-section,.features,.promo-section,.how-it-works{padding-left:22px;padding-right:22px}
   .trust-strip{margin-left:22px;margin-right:22px}
   .detail-grid{grid-template-columns:1fr}
+  .view-toggle{width:100%}
+  .view-toggle button{flex:1}
+  .kz-map{min-height:250px}
+  .map-pin-label{padding:6px 7px}
+  .map-pin-label small{display:none}
   .view-toggle{width:100%}
   .view-toggle button{flex:1}
   .kz-map{min-height:250px}
